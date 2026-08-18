@@ -8,6 +8,44 @@ import Enrollment from '@/models/Enrollment';
 import Order from '@/models/Order';
 import Batch from '@/models/Batch';
 
+const default24Classes = [
+  // Chapter 1: World & Bangladesh Context
+  { title: 'Class 01: Lesson 1 - Intro to ICT & Virtual Reality', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 02: Lesson 2 - Artificial Intelligence & Robotics Applications', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 03: Lesson 3 - Biometrics, Genetic Engineering & Cyber Ethics', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+
+  // Chapter 2: Communication Systems & Networks
+  { title: 'Class 04: Lesson 4 - Data Communication Systems & Transmission Media', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 05: Lesson 5 - Wireless Networks (Wi-Fi, Bluetooth, 4G/5G)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 06: Lesson 6 - Network Topologies & Cloud Computing Architecture', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+
+  // Chapter 3: Number Systems & Logic Gates
+  { title: 'Class 07: Lesson 7 - Number Systems: Binary, Octal, Hex Conversions', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 08: Lesson 8 - Binary Arithmetic & 2\'s Complement Subtraction', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 09: Lesson 9 - BCD, ASCII, EBCDIC & Unicode Encodings', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 10: Lesson 10 - Basic Logic Gates (AND, OR, NOT) & Truth Tables', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 11: Lesson 11 - Universal Gates (NAND, NOR) & Special Gates (XOR)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 12: Lesson 12 - Boolean Algebra Theorems & De Morgan\'s Law', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 13: Lesson 13 - Half Adder & Full Adder Circuit Design', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 14: Lesson 14 - Encoders, Decoders & Multiplexers (MUX)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 15: Lesson 15 - Flip-Flops, Registers & Binary Counters', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+
+  // Chapter 4: Web Page Design & HTML
+  { title: 'Class 16: Lesson 16 - Intro to Web Design, Domain & HTML Tags', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 17: Lesson 17 - HTML Formatting, Headings & Lists', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 18: Lesson 18 - Embedding Images, Hyperlinks & HTML Tables', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 19: Lesson 19 - HTML Forms, Input Elements & Web Layout Design', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+
+  // Chapter 5: C Programming
+  { title: 'Class 20: Lesson 20 - Programming Concepts: Algorithm, Flowchart & C Syntax', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 21: Lesson 21 - C Variables, Data Types & Conditionals (if-else, switch)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 22: Lesson 22 - C Loops: For, While & Do-While Control Flow', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 23: Lesson 23 - C Arrays & User-Defined Functions', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+
+  // Chapter 6: DBMS
+  { title: 'Class 24: Lesson 24 - Relational Database Systems (RDBMS) & SQL Queries', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+];
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ courseId: string }> }
@@ -74,29 +112,10 @@ export async function GET(
       .sort({ createdAt: -1 })
       .lean();
 
-    // Provide default interactive learning modules if course.modules is empty
+    // Provide 24-Class structured curriculum for HSC ICT or if modules length < 24
     let modules = (course as any).modules || [];
-    if (!modules || modules.length === 0) {
-      modules = [
-        {
-          title: 'Module 1: Complete Video Lecture & Concept Introduction',
-          type: 'video',
-          url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM',
-          durationMinutes: 45,
-        },
-        {
-          title: 'Module 2: Practice PDF Notes & Problem Solutions',
-          type: 'pdf',
-          url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-          durationMinutes: 20,
-        },
-        {
-          title: 'Module 3: Code Repository & Project Source Materials',
-          type: 'pdf',
-          url: 'https://github.com/topics/computer-science',
-          durationMinutes: 30,
-        },
-      ];
+    if (!modules || modules.length < 24) {
+      modules = default24Classes;
       (course as any).modules = modules;
     }
 
