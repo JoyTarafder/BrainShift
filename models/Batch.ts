@@ -8,6 +8,14 @@ export interface IBatchMaterial {
   addedAt?: Date;
 }
 
+export interface IBatchModule {
+  _id?: string;
+  title: string;
+  type?: 'video' | 'pdf' | 'link';
+  url: string;
+  durationMinutes?: number;
+}
+
 export interface IBatch extends Document {
   name: string;
   courseId: mongoose.Types.ObjectId | string;
@@ -20,6 +28,7 @@ export interface IBatch extends Document {
   whatsappUrl?: string;
   notice?: string;
   materials?: IBatchMaterial[];
+  modules?: IBatchModule[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +55,14 @@ const BatchSchema = new Schema<IBatch>(
         url: { type: String, required: true },
         type: { type: String, enum: ['pdf', 'slide', 'note', 'video'], default: 'pdf' },
         addedAt: { type: Date, default: Date.now },
+      },
+    ],
+    modules: [
+      {
+        title: { type: String, required: true },
+        type: { type: String, enum: ['video', 'pdf', 'link'], default: 'video' },
+        url: { type: String, required: true },
+        durationMinutes: { type: Number },
       },
     ],
   },

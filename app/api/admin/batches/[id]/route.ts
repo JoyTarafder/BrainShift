@@ -86,7 +86,12 @@ export async function GET(
     });
 
     const realEnrolledCount = Math.max(batchDoc.enrolledCount || 0, enrolledStudents.length);
-    const modules = courseObj?.modules && courseObj.modules.length > 0 ? courseObj.modules : (batchDoc as any).modules || [];
+    const modules =
+      (batchDoc as any).modules && (batchDoc as any).modules.length > 0
+        ? (batchDoc as any).modules
+        : courseObj?.modules && courseObj.modules.length > 0
+        ? courseObj.modules
+        : [];
 
     return NextResponse.json({
       success: true,
@@ -122,6 +127,7 @@ export async function PUT(
     if (body.status !== undefined) updateFields.status = body.status;
     if (body.maxStudents !== undefined) updateFields.maxStudents = Number(body.maxStudents);
     if (body.materials !== undefined) updateFields.materials = body.materials;
+    if (body.modules !== undefined) updateFields.modules = body.modules;
 
     const updatedBatch = await Batch.findByIdAndUpdate(
       id,
