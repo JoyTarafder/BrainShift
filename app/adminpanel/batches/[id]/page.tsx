@@ -30,6 +30,14 @@ import {
   Edit2,
   Sparkles,
   X,
+  Upload,
+  Award,
+  FileCheck,
+  Send,
+  HelpCircle,
+  Trophy,
+  CheckSquare,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { fetchApi } from '@/lib/api';
 
@@ -125,7 +133,41 @@ export default function AdminBatchDetailPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [activeTab, setActiveTab] = useState<'lessons' | 'students' | 'links' | 'notice' | 'materials'>('lessons');
+  const [activeTab, setActiveTab] = useState<'lessons' | 'students' | 'links' | 'notice' | 'materials' | 'assignments' | 'exams'>('lessons');
+
+  // Assignment Management States
+  const [assignments, setAssignments] = useState<any[]>([]);
+  const [assignTitle, setAssignTitle] = useState('');
+  const [assignDesc, setAssignDesc] = useState('');
+  const [assignTotalMarks, setAssignTotalMarks] = useState('100');
+  const [assignDueDate, setAssignDueDate] = useState('');
+  const [creatingAssign, setCreatingAssign] = useState(false);
+
+  // Submissions Modal State
+  const [selectedAssign, setSelectedAssign] = useState<any | null>(null);
+  const [gradingSubId, setGradingSubId] = useState<string | null>(null);
+  const [gradeMarks, setGradeMarks] = useState('');
+  const [gradeFeedback, setGradeFeedback] = useState('');
+  const [grading, setGrading] = useState(false);
+
+  // Exam Management States
+  const [exams, setExams] = useState<any[]>([]);
+  const [examTitle, setExamTitle] = useState('');
+  const [examType, setExamType] = useState<'online_mcq' | 'written_exam'>('online_mcq');
+  const [examDesc, setExamDesc] = useState('');
+  const [examDuration, setExamDuration] = useState('30');
+  const [examTotalMarks, setExamTotalMarks] = useState('100');
+  const [examPassMarks, setExamPassMarks] = useState('40');
+  const [examQuestions, setExamQuestions] = useState<any[]>([
+    { question: '', options: ['', '', '', ''], correctOption: 0, explanation: '' },
+  ]);
+  const [creatingExam, setCreatingExam] = useState(false);
+
+  // Exam Results Modal State
+  const [selectedExam, setSelectedExam] = useState<any | null>(null);
+  const [gradingStudentId, setGradingStudentId] = useState<string | null>(null);
+  const [offlineScore, setOfflineScore] = useState('');
+  const [savingExamMark, setSavingExamMark] = useState(false);
 
   // Form States for Links & Notice
   const [meetUrl, setMeetUrl] = useState('');
@@ -186,9 +228,211 @@ export default function AdminBatchDetailPage() {
     }
   };
 
+  const loadAssignments = async () => {
+    if (!batchId) return;
+    try {
+      const res = await fetch(`/api/admin/assignments?batchId=${batchId}`);
+      const data = await res.json();
+      if (data.assignments) {
+        setAssignments(data.assignments);
+      }
+    } catch (err) {
+      console.error('Error loading assignments:', err);
+    }
+  };
+
+  const loadExams = async () => {
+    if (!batchId) return;
+    try {
+      const res = await fetch(`/api/admin/exams?batchId=${batchId}`);
+      const data = await res.json();
+      if (data.exams) setExams(data.exams);
+    } catch (err) {
+      console.error('Error loading exams:', err);
+    }
+  };
+
   useEffect(() => {
     loadBatchDetails();
+    loadAssignments();
+    loadExams();
   }, [batchId, session]);
+
+  const handleCreateExam = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!examTitle) return;
+    setCreatingExam(true);
+    try {
+      const validQuestions = examType === 'online_mcq'
+        ? examQuestions.filter((q) => q.question.trim() !== '')
+        : [];
+
+      const res = await fetch('/api/admin/exams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          batchId,
+          courseId: batch?.courseId?._id || batch?.courseId,
+          title: examTitle,
+          type: examType,
+          description: examDesc,
+          durationMinutes: Number(examDuration) || 30,
+          totalMarks: Number(examTotalMarks) || 100,
+          passMarks: Number(examPassMarks) || 40,
+          questions: validQuestions,
+        }),
+      });
+
+      if (res.ok) {
+        setExamTitle('');
+        setExamDesc('');
+        setExamDuration('30');
+        setExamTotalMarks('100');
+        setExamPassMarks('40');
+        setExamQuestions([{ question: '', options: ['', '', '', ''], correctOption: 0, explanation: '' }]);
+        setSuccessMsg('Exam published successfully!');
+        setTimeout(() => setSuccessMsg(''), 3000);
+        loadExams();
+      }
+    } catch (err) {
+      setError('Failed to create exam');
+    } finally {
+      setCreatingExam(false);
+    }
+  };
+
+  const handleDeleteExam = async (examId: string) => {
+    if (!confirm('Are you sure you want to delete this exam?')) return;
+    try {
+      const res = await fetch(`/api/admin/exams?examId=${examId}`, { method: 'DELETE' });
+      if (res.ok) {
+        if (selectedExam?._id === examId) setSelectedExam(null);
+        loadExams();
+      }
+    } catch (err) {
+      setError('Failed to delete exam');
+    }
+  };
+
+  const handleRecordOfflineMark = async (e: React.FormEvent, examId: string, student: StudentItem) => {
+    e.preventDefault();
+    setSavingExamMark(true);
+    try {
+      const numScore = Number(offlineScore) || 0;
+      const res = await fetch('/api/admin/exams', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          examId,
+          studentId: student.studentId || student._id,
+          studentName: student.name,
+          studentEmail: student.email,
+          score: numScore,
+          totalMarks: selectedExam?.totalMarks || 100,
+          passed: numScore >= (selectedExam?.passMarks || 40),
+        }),
+      });
+
+      if (res.ok) {
+        setGradingStudentId(null);
+        setOfflineScore('');
+        await loadExams();
+        const res2 = await fetch(`/api/admin/exams?batchId=${batchId}`);
+        const data2 = await res2.json();
+        if (data2.exams) {
+          setExams(data2.exams);
+          const found = data2.exams.find((e: any) => e._id === examId);
+          if (found) setSelectedExam(found);
+        }
+      }
+    } catch (err) {
+      setError('Failed to record exam mark');
+    } finally {
+      setSavingExamMark(false);
+    }
+  };
+
+  const handleCreateAssignment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!assignTitle || !assignDesc || !assignDueDate) return;
+    setCreatingAssign(true);
+    try {
+      const res = await fetch('/api/admin/assignments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          batchId,
+          courseId: batch?.courseId?._id || batch?.courseId,
+          title: assignTitle,
+          description: assignDesc,
+          totalMarks: Number(assignTotalMarks) || 100,
+          dueDate: assignDueDate,
+        }),
+      });
+      if (res.ok) {
+        setAssignTitle('');
+        setAssignDesc('');
+        setAssignDueDate('');
+        setAssignTotalMarks('100');
+        setSuccessMsg('Assignment created successfully!');
+        setTimeout(() => setSuccessMsg(''), 3000);
+        loadAssignments();
+      }
+    } catch (err) {
+      setError('Failed to create assignment');
+    } finally {
+      setCreatingAssign(false);
+    }
+  };
+
+  const handleDeleteAssignment = async (assignmentId: string) => {
+    if (!confirm('Are you sure you want to delete this assignment?')) return;
+    try {
+      const res = await fetch(`/api/admin/assignments?assignmentId=${assignmentId}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        if (selectedAssign?._id === assignmentId) setSelectedAssign(null);
+        loadAssignments();
+      }
+    } catch (err) {
+      setError('Failed to delete assignment');
+    }
+  };
+
+  const handleGradeSubmission = async (e: React.FormEvent, assignmentId: string, submissionId: string) => {
+    e.preventDefault();
+    setGrading(true);
+    try {
+      const res = await fetch('/api/admin/assignments', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assignmentId,
+          submissionId,
+          marksObtained: gradeMarks,
+          feedback: gradeFeedback,
+        }),
+      });
+      if (res.ok) {
+        setGradingSubId(null);
+        setGradeMarks('');
+        setGradeFeedback('');
+        await loadAssignments();
+        const res2 = await fetch(`/api/admin/assignments?batchId=${batchId}`);
+        const data2 = await res2.json();
+        if (data2.assignments) {
+          setAssignments(data2.assignments);
+          const found = data2.assignments.find((a: any) => a._id === assignmentId);
+          if (found) setSelectedAssign(found);
+        }
+      }
+    } catch (err) {
+      setError('Failed to grade submission');
+    } finally {
+      setGrading(false);
+    }
+  };
 
   // Save Lessons to DB
   const saveLessonsToDb = async (updatedLessons: LessonItem[]) => {
@@ -574,6 +818,30 @@ export default function AdminBatchDetailPage() {
         >
           <FileText className="w-4 h-4 text-indigo-400" />
           <span>Course Materials ({materials.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('assignments')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+            activeTab === 'assignments'
+              ? 'bg-[#0b2545] text-white shadow-md'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <Upload className="w-4 h-4 text-purple-400" />
+          <span>Student Assignments ({assignments.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('exams')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+            activeTab === 'exams'
+              ? 'bg-[#0b2545] text-white shadow-md'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <Trophy className="w-4 h-4 text-amber-400" />
+          <span>Exams & Quizzes ({exams.length})</span>
         </button>
       </div>
 
@@ -1167,6 +1435,804 @@ export default function AdminBatchDetailPage() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 6: STUDENT ASSIGNMENTS & SUBMISSIONS MANAGEMENT */}
+      {activeTab === 'assignments' && (
+        <div className="space-y-6">
+          {/* Create Assignment Form */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+            <div className="border-b border-slate-100 pb-4">
+              <h2 className="text-xl font-black text-[#0b2545] flex items-center gap-2">
+                <Upload className="w-5 h-5 text-purple-600" />
+                <span>Create New Student Assignment</span>
+              </h2>
+              <p className="text-slate-500 text-xs mt-1">
+                Assign homework or lab tasks for enrolled students in this batch. Students can upload solutions via Google Drive or document links.
+              </p>
+            </div>
+
+            <form onSubmit={handleCreateAssignment} className="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                <div className="sm:col-span-8">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Assignment Title *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={assignTitle}
+                    onChange={(e) => setAssignTitle(e.target.value)}
+                    placeholder="e.g. Assignment 01: Logic Gates Truth Table & Adder Circuit Design"
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Total Marks *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={assignTotalMarks}
+                    onChange={(e) => setAssignTotalMarks(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Submission Due Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={assignDueDate}
+                    onChange={(e) => setAssignDueDate(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                  Assignment Instructions & Description *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={assignDesc}
+                  onChange={(e) => setAssignDesc(e.target.value)}
+                  placeholder="Provide detailed instructions for students (e.g. Draw truth tables for XOR gate and submit PDF/Google Drive link)..."
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={creatingAssign}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow-md transition-all disabled:opacity-50"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>{creatingAssign ? 'Publishing...' : 'Publish Assignment'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Assignments List */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+            <h3 className="text-lg font-black text-[#0b2545]">
+              Batch Assignments & Student Submissions ({assignments.length})
+            </h3>
+
+            {assignments.length === 0 ? (
+              <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-300 space-y-2">
+                <Upload className="w-10 h-10 text-slate-400 mx-auto" />
+                <p className="text-xs font-extrabold text-slate-600">No assignments created yet for this batch.</p>
+                <p className="text-[11px] text-slate-400">Use the form above to publish your first homework or lab assignment.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {assignments.map((assign: any) => {
+                  const subCount = assign.submissions?.length || 0;
+                  const gradedCount = assign.submissions?.filter((s: any) => s.status === 'graded').length || 0;
+                  return (
+                    <div
+                      key={assign._id}
+                      className="p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h4 className="font-extrabold text-slate-900 text-sm">{assign.title}</h4>
+                          <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 border border-purple-200">
+                            Total Marks: {assign.totalMarks}
+                          </span>
+                          <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                            Due: {new Date(assign.dueDate).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 line-clamp-2">{assign.description}</p>
+                        <div className="flex items-center gap-4 text-xs text-slate-500 pt-1">
+                          <span className="font-bold text-slate-700">
+                            Submissions: <strong className="text-purple-600 font-black">{subCount}</strong> students
+                          </span>
+                          <span className="font-bold text-slate-700">
+                            Graded: <strong className="text-emerald-600 font-black">{gradedCount}</strong> / {subCount}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => setSelectedAssign(assign)}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0b2545] hover:bg-[#13293d] text-white font-extrabold text-xs shadow-sm transition-all"
+                        >
+                          <FileCheck className="w-4 h-4 text-amber-400" />
+                          <span>View Submissions ({subCount})</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteAssignment(assign._id)}
+                          className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                          title="Delete Assignment"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* SUBMISSIONS MODAL / DRAWER */}
+      {selectedAssign && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-slate-200 max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="p-6 bg-[#0b2545] text-white flex items-center justify-between border-b border-slate-800">
+              <div>
+                <span className="text-[10px] uppercase font-black tracking-wider text-amber-400 bg-amber-950/80 px-2.5 py-0.5 rounded-md border border-amber-500/30">
+                  Total Marks: {selectedAssign.totalMarks}
+                </span>
+                <h3 className="text-lg font-black text-white mt-1">{selectedAssign.title}</h3>
+                <p className="text-xs text-slate-300">Due Date: {new Date(selectedAssign.dueDate).toLocaleDateString()}</p>
+              </div>
+              <button
+                onClick={() => setSelectedAssign(null)}
+                className="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Content Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1 text-xs">
+                <span className="font-extrabold text-slate-900 uppercase text-[10px] tracking-wider text-indigo-600 block">
+                  Assignment Instructions
+                </span>
+                <p className="text-slate-700 whitespace-pre-wrap">{selectedAssign.description}</p>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-black text-slate-900 text-sm">
+                  Student Submissions ({selectedAssign.submissions?.length || 0})
+                </h4>
+
+                {!selectedAssign.submissions || selectedAssign.submissions.length === 0 ? (
+                  <div className="text-center py-8 bg-slate-50 rounded-2xl text-xs text-slate-500 font-medium">
+                    No student has submitted solutions for this assignment yet.
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {selectedAssign.submissions.map((sub: any) => (
+                      <div
+                        key={sub._id}
+                        className="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-4"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                          <div>
+                            <span className="font-black text-slate-900 text-sm block">{sub.studentName}</span>
+                            <span className="text-xs text-slate-500">{sub.studentEmail}</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-slate-400 font-mono">
+                              Submitted: {new Date(sub.submittedAt).toLocaleString()}
+                            </span>
+                            {sub.status === 'graded' ? (
+                              <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                Graded: {sub.marksObtained}/{selectedAssign.totalMarks}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                                Pending Grade
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Submission Link & Notes */}
+                        <div className="space-y-2 text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-700">Submitted Work / Solution Link:</span>
+                            <a
+                              href={sub.submissionUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-3 py-1 rounded-xl bg-purple-50 text-purple-700 hover:bg-purple-100 font-bold transition-colors border border-purple-200"
+                            >
+                              <span>Open Student Link / Document</span>
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
+                          </div>
+                          {sub.notes && (
+                            <p className="text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                              <strong className="text-slate-800">Student Notes:</strong> {sub.notes}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Grading Form / Display */}
+                        <div className="pt-2 border-t border-slate-100">
+                          {gradingSubId === sub._id ? (
+                            <form
+                              onSubmit={(e) => handleGradeSubmission(e, selectedAssign._id, sub._id)}
+                              className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3"
+                            >
+                              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                                <div className="sm:col-span-4">
+                                  <label className="block text-[11px] font-bold text-slate-800 mb-1">
+                                    Marks (Out of {selectedAssign.totalMarks}) *
+                                  </label>
+                                  <input
+                                    type="number"
+                                    required
+                                    min="0"
+                                    max={selectedAssign.totalMarks}
+                                    value={gradeMarks}
+                                    onChange={(e) => setGradeMarks(e.target.value)}
+                                    placeholder={`e.g. 85`}
+                                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold"
+                                  />
+                                </div>
+                                <div className="sm:col-span-8">
+                                  <label className="block text-[11px] font-bold text-slate-800 mb-1">
+                                    Teacher Feedback & Comments
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={gradeFeedback}
+                                    onChange={(e) => setGradeFeedback(e.target.value)}
+                                    placeholder="e.g. Great logic implementation! Truth table is accurate."
+                                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs"
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex justify-end gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setGradingSubId(null)}
+                                  className="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-100"
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="submit"
+                                  disabled={grading}
+                                  className="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm disabled:opacity-50"
+                                >
+                                  {grading ? 'Saving...' : 'Save Grade'}
+                                </button>
+                              </div>
+                            </form>
+                          ) : (
+                            <div className="flex items-center justify-between">
+                              {sub.status === 'graded' ? (
+                                <div className="text-xs space-y-0.5">
+                                  <span className="font-bold text-emerald-700">
+                                    Marks: {sub.marksObtained} / {selectedAssign.totalMarks}
+                                  </span>
+                                  {sub.feedback && (
+                                    <p className="text-slate-500 text-[11px]">
+                                      Feedback: &quot;{sub.feedback}&quot;
+                                    </p>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-amber-600 font-bold">Not Graded Yet</span>
+                              )}
+
+                              <button
+                                onClick={() => {
+                                  setGradingSubId(sub._id);
+                                  setGradeMarks(sub.marksObtained ? String(sub.marksObtained) : '');
+                                  setGradeFeedback(sub.feedback || '');
+                                }}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black transition-colors"
+                              >
+                                <Award className="w-3.5 h-3.5" />
+                                <span>{sub.status === 'graded' ? 'Edit Grade' : 'Grade Solution'}</span>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 7: BATCH EXAMS & QUIZZES MANAGEMENT */}
+      {activeTab === 'exams' && (
+        <div className="space-y-6">
+          {/* Create Exam Form */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+            <div className="border-b border-slate-100 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-black text-[#0b2545] flex items-center gap-2">
+                  <Trophy className="w-5 h-5 text-amber-500" />
+                  <span>Create & Publish New Exam / Quiz</span>
+                </h2>
+                <p className="text-slate-500 text-xs mt-1">
+                  Publish Online MCQ Quizzes (auto-graded) or Offline Written Exams for batch students.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleCreateExam} className="space-y-6 bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                <div className="sm:col-span-6">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Exam Title *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={examTitle}
+                    onChange={(e) => setExamTitle(e.target.value)}
+                    placeholder="e.g. Model Test 01: Logic Gates & Boolean Algebra"
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+
+                <div className="sm:col-span-3">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Exam Format / Type *
+                  </label>
+                  <select
+                    value={examType}
+                    onChange={(e: any) => setExamType(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  >
+                    <option value="online_mcq">Online MCQ Quiz (Auto-Graded)</option>
+                    <option value="written_exam">Offline / Written Exam (Teacher Graded)</option>
+                  </select>
+                </div>
+
+                <div className="sm:col-span-3">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Time Limit (Minutes) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="5"
+                    value={examDuration}
+                    onChange={(e) => setExamDuration(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-4">
+                <div className="sm:col-span-6">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Total Marks *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="10"
+                    value={examTotalMarks}
+                    onChange={(e) => setExamTotalMarks(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+
+                <div className="sm:col-span-6">
+                  <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                    Passing Marks *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={examPassMarks}
+                    onChange={(e) => setExamPassMarks(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                  Exam Syllabus & Instructions
+                </label>
+                <textarea
+                  rows={2}
+                  value={examDesc}
+                  onChange={(e) => setExamDesc(e.target.value)}
+                  placeholder="e.g. Topics covered: Chapter 3 Logic Gates, Truth tables, Half Adder & Full Adder..."
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                />
+              </div>
+
+              {/* Interactive MCQ Question Builder */}
+              {examType === 'online_mcq' && (
+                <div className="space-y-4 pt-4 border-t border-slate-200">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-extrabold text-slate-900 text-xs uppercase tracking-wider text-purple-700 flex items-center gap-1.5">
+                      <HelpCircle className="w-4 h-4 text-purple-600" />
+                      <span>MCQ Questions Builder ({examQuestions.length})</span>
+                    </h4>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExamQuestions([
+                          ...examQuestions,
+                          { question: '', options: ['', '', '', ''], correctOption: 0, explanation: '' },
+                        ])
+                      }
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-800 font-extrabold text-xs transition-colors"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Add Question</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {examQuestions.map((q: any, qIdx: number) => (
+                      <div key={qIdx} className="p-4 bg-white rounded-2xl border border-slate-300 shadow-sm space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-black text-xs text-slate-800">
+                            Question #{qIdx + 1}
+                          </span>
+                          {examQuestions.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => setExamQuestions(examQuestions.filter((_, i) => i !== qIdx))}
+                              className="text-rose-500 hover:bg-rose-50 p-1 rounded-lg text-xs font-bold"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+
+                        <input
+                          type="text"
+                          required
+                          value={q.question}
+                          onChange={(e) => {
+                            const updated = [...examQuestions];
+                            updated[qIdx].question = e.target.value;
+                            setExamQuestions(updated);
+                          }}
+                          placeholder={`Enter Question ${qIdx + 1} text...`}
+                          className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900"
+                        />
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {q.options.map((opt: string, optIdx: number) => (
+                            <div key={optIdx} className="flex items-center gap-2 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                              <input
+                                type="radio"
+                                name={`correct-${qIdx}`}
+                                checked={q.correctOption === optIdx}
+                                onChange={() => {
+                                  const updated = [...examQuestions];
+                                  updated[qIdx].correctOption = optIdx;
+                                  setExamQuestions(updated);
+                                }}
+                                className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+                              />
+                              <input
+                                type="text"
+                                required
+                                value={opt}
+                                onChange={(e) => {
+                                  const updated = [...examQuestions];
+                                  updated[qIdx].options[optIdx] = e.target.value;
+                                  setExamQuestions(updated);
+                                }}
+                                placeholder={`Option ${String.fromCharCode(65 + optIdx)}`}
+                                className="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs"
+                              />
+                            </div>
+                          ))}
+                        </div>
+
+                        <input
+                          type="text"
+                          value={q.explanation || ''}
+                          onChange={(e) => {
+                            const updated = [...examQuestions];
+                            updated[qIdx].explanation = e.target.value;
+                            setExamQuestions(updated);
+                          }}
+                          placeholder="Explanation / Solution hint for students (optional)..."
+                          className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] text-slate-600"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="submit"
+                  disabled={creatingExam}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition-all disabled:opacity-50"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>{creatingExam ? 'Publishing Exam...' : 'Publish Exam'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Exams List */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+            <h3 className="text-lg font-black text-[#0b2545]">
+              Published Batch Exams & Model Tests ({exams.length})
+            </h3>
+
+            {exams.length === 0 ? (
+              <div className="text-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-300 space-y-2">
+                <Trophy className="w-10 h-10 text-slate-400 mx-auto" />
+                <p className="text-xs font-extrabold text-slate-600">No exams created yet for this batch.</p>
+                <p className="text-[11px] text-slate-400">Use the form above to publish your first online MCQ test or written exam.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {exams.map((exam: any) => {
+                  const resultCount = exam.results?.length || 0;
+                  const passedCount = exam.results?.filter((r: any) => r.passed).length || 0;
+
+                  return (
+                    <div
+                      key={exam._id}
+                      className="p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h4 className="font-extrabold text-slate-900 text-sm">{exam.title}</h4>
+                          <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${
+                            exam.type === 'online_mcq'
+                              ? 'bg-purple-100 text-purple-800 border-purple-200'
+                              : 'bg-indigo-100 text-indigo-800 border-indigo-200'
+                          }`}>
+                            {exam.type === 'online_mcq' ? 'Online MCQ Quiz' : 'Offline / Written Exam'}
+                          </span>
+                          <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-800">
+                            Time: {exam.durationMinutes} Mins
+                          </span>
+                          <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                            Total Marks: {exam.totalMarks} (Pass: {exam.passMarks})
+                          </span>
+                        </div>
+                        {exam.description && (
+                          <p className="text-xs text-slate-600 line-clamp-1">{exam.description}</p>
+                        )}
+                        <div className="flex items-center gap-4 text-xs text-slate-500 pt-1">
+                          <span className="font-bold text-slate-700">
+                            Exam Attempts: <strong className="text-amber-600 font-black">{resultCount}</strong> students
+                          </span>
+                          <span className="font-bold text-slate-700">
+                            Passed: <strong className="text-emerald-600 font-black">{passedCount}</strong> / {resultCount}
+                          </span>
+                          {exam.questions?.length > 0 && (
+                            <span className="font-bold text-slate-700">
+                              Questions: <strong className="text-purple-600 font-black">{exam.questions.length} MCQs</strong>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => setSelectedExam(exam)}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0b2545] hover:bg-[#13293d] text-white font-extrabold text-xs shadow-sm transition-all"
+                        >
+                          <Trophy className="w-4 h-4 text-amber-400" />
+                          <span>View Results & Marks ({resultCount})</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteExam(exam._id)}
+                          className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                          title="Delete Exam"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* EXAM RESULTS & MARKS MODAL / DRAWER */}
+      {selectedExam && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-slate-200 max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="p-6 bg-[#0b2545] text-white flex items-center justify-between border-b border-slate-800">
+              <div>
+                <span className="text-[10px] uppercase font-black tracking-wider text-amber-400 bg-amber-950/80 px-2.5 py-0.5 rounded-md border border-amber-500/30">
+                  {selectedExam.type === 'online_mcq' ? 'Online MCQ Test' : 'Written Exam'}
+                </span>
+                <h3 className="text-lg font-black text-white mt-1">{selectedExam.title}</h3>
+                <p className="text-xs text-slate-300">
+                  Total Marks: {selectedExam.totalMarks} | Pass Marks: {selectedExam.passMarks} | Time: {selectedExam.durationMinutes} Mins
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedExam(null)}
+                className="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Body Content */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              {/* Enrolled Students & Marks Table */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-black text-slate-900 text-sm">
+                    Student Results & Report Card ({students.length} Enrolled)
+                  </h4>
+                </div>
+
+                <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-slate-100 text-slate-700 font-extrabold uppercase text-[10px]">
+                        <th className="p-3">Student Name & Email</th>
+                        <th className="p-3">Score / Total</th>
+                        <th className="p-3">Status</th>
+                        <th className="p-3">Answer Script</th>
+                        <th className="p-3 text-right">Action / Grade</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200 font-medium">
+                      {students.map((st: StudentItem) => {
+                        const result = selectedExam.results?.find(
+                          (r: any) => r.studentId?.toString() === (st.studentId || st._id)?.toString()
+                        );
+
+                        return (
+                          <tr key={st._id} className="hover:bg-slate-50">
+                            <td className="p-3">
+                              <span className="font-bold text-slate-900 block">{st.name}</span>
+                              <span className="text-[11px] text-slate-500 block">{st.email}</span>
+                            </td>
+
+                            <td className="p-3">
+                              {result ? (
+                                <strong className="text-purple-700 font-black text-sm">
+                                  {result.score} / {selectedExam.totalMarks}
+                                </strong>
+                              ) : (
+                                <span className="text-slate-400 italic">Not taken yet</span>
+                              )}
+                            </td>
+
+                            <td className="p-3">
+                              {result ? (
+                                result.passed ? (
+                                  <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                    PASSED
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300">
+                                    FAILED
+                                  </span>
+                                )
+                              ) : (
+                                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-500">
+                                  No Attempt
+                                </span>
+                              )}
+                            </td>
+
+                            <td className="p-3">
+                              {result?.submissionUrl ? (
+                                <a
+                                  href={result.submissionUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-extrabold text-xs transition-colors"
+                                >
+                                  <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                                  <span>Check Answer Script</span>
+                                  <ExternalLink className="w-3 h-3 text-indigo-500" />
+                                </a>
+                              ) : (
+                                <span className="text-[11px] text-slate-400 italic">No Script</span>
+                              )}
+                            </td>
+
+                            <td className="p-3 text-right">
+                              {gradingStudentId === st._id ? (
+                                <form
+                                  onSubmit={(e) => handleRecordOfflineMark(e, selectedExam._id, st)}
+                                  className="flex items-center justify-end gap-2"
+                                >
+                                  <input
+                                    type="number"
+                                    required
+                                    min="0"
+                                    max={selectedExam.totalMarks}
+                                    value={offlineScore}
+                                    onChange={(e) => setOfflineScore(e.target.value)}
+                                    placeholder="Score"
+                                    className="w-20 px-2 py-1 bg-white border border-slate-300 rounded-lg text-xs font-bold"
+                                  />
+                                  <button
+                                    type="submit"
+                                    disabled={savingExamMark}
+                                    className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold"
+                                  >
+                                    Save
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setGradingStudentId(null)}
+                                    className="px-2 py-1 text-slate-500 hover:bg-slate-200 rounded-lg text-xs"
+                                  >
+                                    Cancel
+                                  </button>
+                                </form>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    setGradingStudentId(st._id);
+                                    setOfflineScore(result ? String(result.score) : '');
+                                  }}
+                                  className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-lg text-[11px]"
+                                >
+                                  {result ? 'Edit Mark' : 'Enter Mark'}
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
