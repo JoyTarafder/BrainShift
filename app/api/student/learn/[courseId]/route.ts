@@ -105,19 +105,22 @@ export async function GET(
       }
     }
 
-    // Fetch corresponding Batch details (Live Meet Link, WhatsApp Group Link, Notice, Materials)
+    // Fetch corresponding Batch details (Live Meet Link, WhatsApp Group Link, Notice, Materials, Video Lessons)
     const batch = await Batch.findOne({
       $or: [{ courseId: (course as any)._id }, { courseId: realCourseId }],
     })
       .sort({ createdAt: -1 })
       .lean();
 
-    // Provide 24-Class structured curriculum for HSC ICT or if modules length < 24
-    let modules = (course as any).modules || [];
-    if (!modules || modules.length < 24) {
-      modules = default24Classes;
-      (course as any).modules = modules;
-    }
+    // Prioritize Admin-updated modules from Batch first, then Course, then default fallback
+    let modules =
+      (batch as any)?.modules && (batch as any).modules.length > 0
+        ? (batch as any).modules
+        : (course as any)?.modules && (course as any).modules.length > 0
+        ? (course as any).modules
+        : default24Classes;
+
+    (course as any).modules = modules;
 
     return NextResponse.json({
       isEnrolled: true,
