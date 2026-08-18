@@ -2,8 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { PlusCircle, Edit3, Trash2, Eye, ShieldCheck, ArrowLeft, BookOpen } from 'lucide-react';
+import { PlusCircle, Edit3, Trash2, Eye, ShieldCheck, ArrowLeft, BookOpen, ToggleLeft, ToggleRight } from 'lucide-react';
 import DeleteCourseButton from '@/components/DeleteCourseButton';
+import QuickEnrollToggle from '@/components/QuickEnrollToggle';
 import { connectToDatabase } from '@/lib/db';
 import mongoose from 'mongoose';
 
@@ -11,11 +12,13 @@ const CourseSchema = new mongoose.Schema({
   title: String,
   slug: String,
   price: Number,
+  oldPrice: Number,
   subject: String,
   level: String,
   duration: String,
   thumbnailUrl: String,
   status: String,
+  enrollmentOpen: { type: Boolean, default: true },
   createdAt: Date,
 });
 const Course = mongoose.models.Course || mongoose.model('Course', CourseSchema);
@@ -24,32 +27,9 @@ export default async function AdminCoursesPage() {
   const session = await getServerSession(authOptions);
   const token = (session?.user as any)?.apiToken;
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-
-  let courses: any[] = [];
-  let errorMsg = '';
-
-  try {
-    const res = await fetch(`${API_URL}/courses`, { cache: 'no-store' });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && data.courses) {
-        courses = data.courses;
-      }
-    }
-  } catch (err) {
-    // Silently fallback to DB query
-  }
-
-  if (courses.length === 0) {
-    try {
-      await connectToDatabase();
-      const docs = await Course.find().sort({ createdAt: -1 }).lean();
-      courses = JSON.parse(JSON.stringify(docs));
-    } catch (dbErr: any) {
-      console.error('Admin courses DB query error:', dbErr);
-    }
-  }
+  await connectToDatabase();
+  const docs = await Course.find().sort({ createdAt: -1 }).lean();
+  const courses = JSON.parse(JSON.stringify(docs));
 
   return (
     <div className="space-y-8">
@@ -60,7 +40,7 @@ export default async function AdminCoursesPage() {
             <h1 className="text-2xl font-extrabold text-[#0b2545]">Course Management</h1>
           </div>
           <p className="text-slate-500 text-sm mt-1">
-            Create, edit, publish, and delete TutorNova courses.
+            Create, edit, publish, toggle enrollment status (OPEN/CLOSED), and manage TutorNova courses.
           </p>
         </div>
 
@@ -82,14 +62,15 @@ export default async function AdminCoursesPage() {
                 <th className="py-4 px-6">Subject</th>
                 <th className="py-4 px-6">Level</th>
                 <th className="py-4 px-6">Price</th>
-                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6">Enrollment Status</th>
+                <th className="py-4 px-6">Publish Status</th>
                 <th className="py-4 px-6 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-sm">
               {courses.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-500">
+                  <td colSpan={7} className="py-12 text-center text-slate-500">
                     No courses available in the database.
                   </td>
                 </tr>
@@ -117,6 +98,16 @@ export default async function AdminCoursesPage() {
                     <td className="py-4 px-6 font-bold text-[#0b2545]">
                       ৳ {course.price?.toLocaleString('en-BD')}
                     </td>
+                    
+                    {/* Quick Interactive Enrollment Toggle Button */}
+                    <td className="py-4 px-6">
+                      <QuickEnrollToggle
+                        courseId={course._id}
+                        initialOpen={course.enrollmentOpen !== false}
+                        token={token}
+                      />
+                    </td>
+
                     <td className="py-4 px-6">
                       <span
                         className={`inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
@@ -128,6 +119,7 @@ export default async function AdminCoursesPage() {
                         {course.status}
                       </span>
                     </td>
+                    
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link

@@ -94,7 +94,23 @@ export const getCourseById = async (req, res) => {
 // @route   POST /api/courses
 export const createCourse = async (req, res) => {
   try {
-    const { title, slug, description, shortDescription, subject, level, price, thumbnailUrl, duration, syllabus, modules, status } = req.body;
+    const {
+      title,
+      slug,
+      description,
+      shortDescription,
+      subject,
+      level,
+      price,
+      oldPrice,
+      enrollmentOpen,
+      batchInfo,
+      thumbnailUrl,
+      duration,
+      syllabus,
+      modules,
+      status,
+    } = req.body;
 
     if (!title || !slug || !description || !shortDescription || !subject || !price || !thumbnailUrl || !duration) {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
@@ -113,6 +129,9 @@ export const createCourse = async (req, res) => {
       subject,
       level: level || 'Beginner',
       price: Number(price),
+      oldPrice: Number(oldPrice) || 0,
+      enrollmentOpen: enrollmentOpen !== undefined ? Boolean(enrollmentOpen) : true,
+      batchInfo: batchInfo || 'Batch 01 (Sat, Mon, Wed • 8:00 PM)',
       thumbnailUrl,
       duration,
       syllabus: syllabus || [],
