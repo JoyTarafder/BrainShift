@@ -37,18 +37,18 @@ export async function GET(
     await connectToDatabase();
 
     // Find Batch by ID or Course ID
-    let batchDoc = await Batch.findById(id).populate('courseId', 'title slug subject price').lean();
+    let batchDoc = await Batch.findById(id).populate('courseId', 'title slug subject price modules').lean();
 
     if (!batchDoc) {
-      // Fallback: try finding by courseId
-      batchDoc = await Batch.findOne({ courseId: id }).populate('courseId', 'title slug subject price').lean();
+      batchDoc = await Batch.findOne({ courseId: id }).populate('courseId', 'title slug subject price modules').lean();
     }
 
     if (!batchDoc) {
       return NextResponse.json({ success: false, message: 'Batch not found' }, { status: 404 });
     }
 
-    const courseIdObj = (batchDoc.courseId as any)?._id || batchDoc.courseId;
+    const courseObj = batchDoc.courseId as any;
+    const courseIdObj = courseObj?._id || batchDoc.courseId;
     const courseIdStr = courseIdObj ? courseIdObj.toString() : '';
 
     // Fetch Enrolled Students for this Batch's Course
@@ -59,7 +59,7 @@ export async function GET(
       .sort({ createdAt: -1 })
       .lean();
 
-    // Fetch corresponding Orders to include TrxID and Sender Mobile
+    // Fetch corresponding Orders
     const orders = await Order.find({
       $or: [{ courseId: courseIdObj }, { courseId: courseIdStr }],
       status: 'paid',
@@ -86,10 +86,11 @@ export async function GET(
     });
 
     const realEnrolledCount = Math.max(batchDoc.enrolledCount || 0, enrolledStudents.length);
+    const modules = courseObj?.modules && courseObj.modules.length > 0 ? courseObj.modules : (batchDoc as any).modules || [];
 
     return NextResponse.json({
       success: true,
-      batch: JSON.parse(JSON.stringify({ ...batchDoc, enrolledCount: realEnrolledCount })),
+      batch: JSON.parse(JSON.stringify({ ...batchDoc, modules, enrolledCount: realEnrolledCount })),
       students: JSON.parse(JSON.stringify(enrolledStudents)),
     });
   } catch (error: any) {
@@ -126,15 +127,23 @@ export async function PUT(
       id,
       { $set: updateFields },
       { new: true, upsert: false }
-    ).populate('courseId', 'title slug subject price');
+    ).populate('courseId', 'title slug subject price modules');
 
     if (!updatedBatch) {
       return NextResponse.json({ success: false, message: 'Batch not found to update' }, { status: 404 });
     }
 
+    // Sync Modules / Video Lessons to Course document as well
+    if (body.modules !== undefined) {
+      const courseIdObj = (updatedBatch.courseId as any)?._id || updatedBatch.courseId;
+      if (courseIdObj) {
+        await Course.findByIdAndUpdate(courseIdObj, { $set: { modules: body.modules } });
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message: 'Batch management settings updated successfully!',
+      message: 'Batch management settings & Video Lessons updated successfully!',
       batch: JSON.parse(JSON.stringify(updatedBatch)),
     });
   } catch (error: any) {

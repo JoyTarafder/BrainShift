@@ -25,6 +25,8 @@ import {
   RefreshCw,
   Search,
   Bell,
+  PlayCircle,
+  Edit2,
   Sparkles,
 } from 'lucide-react';
 import { fetchApi } from '@/lib/api';
@@ -48,6 +50,14 @@ interface MaterialItem {
   addedAt?: string;
 }
 
+interface LessonItem {
+  _id?: string;
+  title: string;
+  url: string;
+  type?: string;
+  durationMinutes?: number;
+}
+
 interface BatchData {
   _id: string;
   name: string;
@@ -60,14 +70,43 @@ interface BatchData {
   whatsappUrl?: string;
   notice?: string;
   materials?: MaterialItem[];
+  modules?: LessonItem[];
   courseId?: {
     _id: string;
     title: string;
     slug: string;
     subject: string;
     price: number;
+    modules?: LessonItem[];
   };
 }
+
+const default24ClassesSeed: LessonItem[] = [
+  { title: 'Class 01: Lesson 1 - Intro to ICT & Virtual Reality', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 02: Lesson 2 - Artificial Intelligence & Robotics Applications', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 03: Lesson 3 - Biometrics, Genetic Engineering & Cyber Ethics', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 04: Lesson 4 - Data Communication Systems & Transmission Media', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 05: Lesson 5 - Wireless Networks (Wi-Fi, Bluetooth, 4G/5G)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 06: Lesson 6 - Network Topologies & Cloud Computing Architecture', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 07: Lesson 7 - Number Systems: Binary, Octal, Hex Conversions', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 08: Lesson 8 - Binary Arithmetic & 2\'s Complement Subtraction', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 09: Lesson 9 - BCD, ASCII, EBCDIC & Unicode Encodings', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 10: Lesson 10 - Basic Logic Gates (AND, OR, NOT) & Truth Tables', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 11: Lesson 11 - Universal Gates (NAND, NOR) & Special Gates (XOR)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 12: Lesson 12 - Boolean Algebra Theorems & De Morgan\'s Law', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 13: Lesson 13 - Half Adder & Full Adder Circuit Design', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 14: Lesson 14 - Encoders, Decoders & Multiplexers (MUX)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 15: Lesson 15 - Flip-Flops, Registers & Binary Counters', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 16: Lesson 16 - Intro to Web Design, Domain & HTML Tags', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 45 },
+  { title: 'Class 17: Lesson 17 - HTML Formatting, Headings & Lists', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 50 },
+  { title: 'Class 18: Lesson 18 - Embedding Images, Hyperlinks & HTML Tables', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 19: Lesson 19 - HTML Forms, Input Elements & Web Layout Design', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 20: Lesson 20 - Programming Concepts: Algorithm, Flowchart & C Syntax', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 21: Lesson 21 - C Variables, Data Types & Conditionals (if-else, switch)', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 22: Lesson 22 - C Loops: For, While & Do-While Control Flow', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+  { title: 'Class 23: Lesson 23 - C Arrays & User-Defined Functions', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 55 },
+  { title: 'Class 24: Lesson 24 - Relational Database Systems (RDBMS) & SQL Queries', type: 'video', url: 'https://www.youtube.com/watch?v=RBSGKlAvoiM', durationMinutes: 60 },
+];
 
 export default function AdminBatchDetailPage() {
   const params = useParams();
@@ -79,16 +118,29 @@ export default function AdminBatchDetailPage() {
 
   const [batch, setBatch] = useState<BatchData | null>(null);
   const [students, setStudents] = useState<StudentItem[]>([]);
+  const [lessons, setLessons] = useState<LessonItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [activeTab, setActiveTab] = useState<'students' | 'links' | 'notice' | 'materials'>('students');
+  const [activeTab, setActiveTab] = useState<'lessons' | 'students' | 'links' | 'notice' | 'materials'>('lessons');
 
   // Form States for Links & Notice
   const [meetUrl, setMeetUrl] = useState('');
   const [whatsappUrl, setWhatsappUrl] = useState('');
   const [notice, setNotice] = useState('');
+
+  // Add Lesson Form
+  const [lessonTitle, setLessonTitle] = useState('');
+  const [lessonUrl, setLessonUrl] = useState('');
+  const [lessonDuration, setLessonDuration] = useState('45');
+  const [addingLesson, setAddingLesson] = useState(false);
+
+  // Edit Lesson State
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editUrl, setEditUrl] = useState('');
+  const [editDuration, setEditDuration] = useState('45');
 
   // New Material Form
   const [materialTitle, setMaterialTitle] = useState('');
@@ -117,6 +169,8 @@ export default function AdminBatchDetailPage() {
       if (data && data.success) {
         setBatch(data.batch);
         setStudents(data.students || []);
+        const loadedLessons = data.batch?.modules || data.batch?.courseId?.modules || [];
+        setLessons(loadedLessons.length > 0 ? loadedLessons : default24ClassesSeed);
         setMeetUrl(data.batch?.meetUrl || '');
         setWhatsappUrl(data.batch?.whatsappUrl || '');
         setNotice(data.batch?.notice || '');
@@ -133,6 +187,95 @@ export default function AdminBatchDetailPage() {
   useEffect(() => {
     loadBatchDetails();
   }, [batchId, session]);
+
+  // Save Lessons to DB
+  const saveLessonsToDb = async (updatedLessons: LessonItem[]) => {
+    setSaving(true);
+    setError('');
+    setSuccessMsg('');
+
+    try {
+      const data = await fetchApi(`/admin/batches/${batchId}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          modules: updatedLessons,
+        }),
+      });
+
+      if (!data || !data.success) {
+        throw new Error(data?.message || 'Failed to update video lessons');
+      }
+
+      setLessons(updatedLessons);
+      setSuccessMsg(`Video lessons (${updatedLessons.length}) updated! Immediately reflected live on Student Dashboard.`);
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err: any) {
+      setError(err?.message || 'Error saving lessons');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddLesson = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!lessonTitle.trim() || !lessonUrl.trim()) {
+      setError('Please provide Class Title and YouTube Video Link');
+      return;
+    }
+
+    setAddingLesson(true);
+    const newLesson: LessonItem = {
+      title: lessonTitle.trim(),
+      url: lessonUrl.trim(),
+      type: 'video',
+      durationMinutes: Number(lessonDuration) || 45,
+    };
+
+    const updated = [...lessons, newLesson];
+    await saveLessonsToDb(updated);
+    setLessonTitle('');
+    setLessonUrl('');
+    setAddingLesson(false);
+  };
+
+  const handleStartEdit = (idx: number) => {
+    const item = lessons[idx];
+    setEditingIndex(idx);
+    setEditTitle(item.title);
+    setEditUrl(item.url);
+    setEditDuration(String(item.durationMinutes || 45));
+  };
+
+  const handleSaveEdit = async (idx: number) => {
+    if (!editTitle.trim() || !editUrl.trim()) return;
+
+    const updated = lessons.map((item, index) => {
+      if (index === idx) {
+        return {
+          ...item,
+          title: editTitle.trim(),
+          url: editUrl.trim(),
+          durationMinutes: Number(editDuration) || 45,
+        };
+      }
+      return item;
+    });
+
+    await saveLessonsToDb(updated);
+    setEditingIndex(null);
+  };
+
+  const handleDeleteLesson = async (idx: number) => {
+    if (!confirm('Are you sure you want to delete this class lesson?')) return;
+    const updated = lessons.filter((_, index) => index !== idx);
+    await saveLessonsToDb(updated);
+  };
+
+  const handleSeed24Classes = async () => {
+    if (!confirm('Populate full 24-Class structured HSC ICT curriculum with YouTube links?')) return;
+    await saveLessonsToDb(default24ClassesSeed);
+  };
 
   const handleSaveLinksAndNotice = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -244,7 +387,6 @@ export default function AdminBatchDetailPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Filter students
   const filteredStudents = students.filter((s) => {
     const term = studentSearch.toLowerCase();
     return (
@@ -260,7 +402,7 @@ export default function AdminBatchDetailPage() {
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 space-y-4 text-center">
         <RefreshCw className="w-8 h-8 animate-spin text-amber-500 mx-auto" />
         <p className="text-slate-600 text-sm font-medium">
-          Loading Batch Sub-Page & Enrolled Students...
+          Loading Batch Sub-Page & Video Lessons...
         </p>
       </div>
     );
@@ -332,17 +474,21 @@ export default function AdminBatchDetailPage() {
               <Users className="w-3.5 h-3.5 text-emerald-400" />
               <span>Enrolled: <strong>{batch?.enrolledCount || 0}</strong> / {batch?.maxStudents || 30} Seats</span>
             </div>
+            <div className="flex items-center gap-1.5 bg-slate-900/60 px-3 py-1.5 rounded-xl border border-slate-800">
+              <PlayCircle className="w-3.5 h-3.5 text-amber-400" />
+              <span>Classes: <strong>{lessons.length}</strong> Lessons</span>
+            </div>
           </div>
         </div>
 
-        {batch?.courseId?.slug && (
+        {batch?.courseId?._id && (
           <a
             href={`/learn/${batch.courseId._id}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-lg transition-transform hover:-translate-y-0.5 shrink-0 self-start md:self-auto z-10"
           >
-            <span>Preview Student Dashboard</span>
+            <span>Preview Student Learning Classroom</span>
             <ExternalLink className="w-4 h-4" />
           </a>
         )}
@@ -366,6 +512,18 @@ export default function AdminBatchDetailPage() {
       {/* Management Navigation Tabs */}
       <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2 overflow-x-auto">
         <button
+          onClick={() => setActiveTab('lessons')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+            activeTab === 'lessons'
+              ? 'bg-[#0b2545] text-white shadow-md'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <PlayCircle className="w-4 h-4 text-amber-400" />
+          <span>Video Lessons ({lessons.length})</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('students')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
             activeTab === 'students'
@@ -373,7 +531,7 @@ export default function AdminBatchDetailPage() {
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <Users className="w-4 h-4 text-amber-400" />
+          <Users className="w-4 h-4 text-emerald-400" />
           <span>Enrolled Students ({students.length})</span>
         </button>
 
@@ -414,7 +572,208 @@ export default function AdminBatchDetailPage() {
         </button>
       </div>
 
-      {/* TAB 1: ENROLLED STUDENTS LIST */}
+      {/* TAB 1: VIDEO LESSONS (24 CLASSES) MANAGEMENT */}
+      {activeTab === 'lessons' && (
+        <div className="space-y-6">
+          {/* Add / Seed Lesson Bar */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div>
+                <h2 className="text-xl font-black text-[#0b2545] flex items-center gap-2">
+                  <PlayCircle className="w-5 h-5 text-amber-500" />
+                  <span>Video Lessons & YouTube Links ({lessons.length})</span>
+                </h2>
+                <p className="text-slate-500 text-xs mt-1">
+                  Add or edit class lesson titles, YouTube video URLs, and class durations. Reflected live for enrolled students.
+                </p>
+              </div>
+
+              <button
+                onClick={handleSeed24Classes}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-md transition-all shrink-0"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Auto-Populate 24 Standard HSC Classes</span>
+              </button>
+            </div>
+
+            {/* Add New Lesson Form */}
+            <form onSubmit={handleAddLesson} className="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+              <div className="sm:col-span-6">
+                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                  Lesson / Class Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={lessonTitle}
+                  onChange={(e) => setLessonTitle(e.target.value)}
+                  placeholder="e.g. Class 01: Lesson 1 - Intro to ICT & Virtual Reality"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                />
+              </div>
+
+              <div className="sm:col-span-4">
+                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                  YouTube Video Link / URL *
+                </label>
+                <input
+                  type="url"
+                  required
+                  value={lessonUrl}
+                  onChange={(e) => setLessonUrl(e.target.value)}
+                  placeholder="e.g. https://www.youtube.com/watch?v=RBSGKlAvoiM"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                  Duration (Mins)
+                </label>
+                <input
+                  type="number"
+                  value={lessonDuration}
+                  onChange={(e) => setLessonDuration(e.target.value)}
+                  placeholder="45"
+                  className="w-full px-3 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                />
+              </div>
+
+              <div className="sm:col-span-12 pt-1 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={addingLesson || saving}
+                  className="px-6 py-2.5 rounded-xl font-black bg-[#0b2545] hover:bg-amber-500 hover:text-slate-950 text-white text-xs shadow-md transition-all inline-flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4 text-amber-400" />
+                  <span>{addingLesson || saving ? 'Saving Class...' : 'Add Class Lesson'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* List of 24 Lessons */}
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+            <h3 className="text-base font-bold text-[#0b2545]">
+              Classes Playlist ({lessons.length} Lessons Added)
+            </h3>
+
+            {lessons.length === 0 ? (
+              <p className="text-slate-500 text-xs py-8 text-center">
+                No video lessons added yet. Click <strong>"Auto-Populate 24 Standard HSC Classes"</strong> above or add classes manually.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {lessons.map((item, idx) => {
+                  const isEditing = editingIndex === idx;
+
+                  if (isEditing) {
+                    return (
+                      <div key={idx} className="p-4 bg-amber-50 rounded-2xl border border-amber-300 space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                          <div className="sm:col-span-6">
+                            <input
+                              type="text"
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold"
+                            />
+                          </div>
+                          <div className="sm:col-span-4">
+                            <input
+                              type="url"
+                              value={editUrl}
+                              onChange={(e) => setEditUrl(e.target.value)}
+                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold"
+                            />
+                          </div>
+                          <div className="sm:col-span-2">
+                            <input
+                              type="number"
+                              value={editDuration}
+                              onChange={(e) => setEditDuration(e.target.value)}
+                              className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 justify-end">
+                          <button
+                            onClick={() => handleSaveEdit(idx)}
+                            disabled={saving}
+                            className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold"
+                          >
+                            Save Changes
+                          </button>
+                          <button
+                            onClick={() => setEditingIndex(null)}
+                            className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-xs font-bold"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={idx}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors gap-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-xl bg-[#0b2545] text-amber-400 flex items-center justify-center font-mono font-black text-xs shrink-0 shadow-xs">
+                          {idx + 1}
+                        </div>
+                        <div className="space-y-0.5">
+                          <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">{item.title}</h4>
+                          <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono">
+                            <span className="text-indigo-600 font-semibold truncate max-w-xs sm:max-w-md">
+                              {item.url}
+                            </span>
+                            <span>• {item.durationMinutes || 45} Mins</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-end sm:self-auto">
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                          title="Preview YouTube Video"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+
+                        <button
+                          onClick={() => handleStartEdit(idx)}
+                          className="p-2 text-slate-600 hover:bg-slate-200 rounded-xl transition-colors"
+                          title="Edit Class Details"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteLesson(idx)}
+                          className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                          title="Delete Lesson"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: ENROLLED STUDENTS LIST */}
       {activeTab === 'students' && (
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
@@ -521,7 +880,7 @@ export default function AdminBatchDetailPage() {
         </div>
       )}
 
-      {/* TAB 2: MEET / ZOOM & WHATSAPP LINKS FORM */}
+      {/* TAB 3: MEET / ZOOM & WHATSAPP LINKS FORM */}
       {activeTab === 'links' && (
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
           <div>
@@ -609,7 +968,7 @@ export default function AdminBatchDetailPage() {
         </div>
       )}
 
-      {/* TAB 3: NOTICE & ANNOUNCEMENTS FORM */}
+      {/* TAB 4: NOTICE & ANNOUNCEMENTS FORM */}
       {activeTab === 'notice' && (
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
           <div>
@@ -648,7 +1007,7 @@ export default function AdminBatchDetailPage() {
         </div>
       )}
 
-      {/* TAB 4: COURSE MATERIALS & FILES MANAGEMENT */}
+      {/* TAB 5: COURSE MATERIALS & FILES MANAGEMENT */}
       {activeTab === 'materials' && (
         <div className="space-y-6">
           {/* Add Material Form */}
