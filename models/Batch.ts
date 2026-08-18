@@ -1,4 +1,12 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
+
+export interface IBatchMaterial {
+  _id?: string;
+  title: string;
+  url: string;
+  type: 'pdf' | 'slide' | 'note' | 'video';
+  addedAt?: Date;
+}
 
 export interface IBatch extends Document {
   name: string;
@@ -8,6 +16,10 @@ export interface IBatch extends Document {
   maxStudents: number;
   enrolledCount: number;
   status: 'upcoming' | 'active' | 'completed';
+  meetUrl?: string;
+  whatsappUrl?: string;
+  notice?: string;
+  materials?: IBatchMaterial[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -25,10 +37,25 @@ const BatchSchema = new Schema<IBatch>(
       enum: ['upcoming', 'active', 'completed'],
       default: 'active',
     },
+    meetUrl: { type: String, default: '' },
+    whatsappUrl: { type: String, default: '' },
+    notice: { type: String, default: '' },
+    materials: [
+      {
+        title: { type: String, required: true },
+        url: { type: String, required: true },
+        type: { type: String, enum: ['pdf', 'slide', 'note', 'video'], default: 'pdf' },
+        addedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
-const Batch = mongoose.models.Batch || mongoose.model<IBatch>('Batch', BatchSchema);
+if (mongoose.models?.Batch) {
+  delete mongoose.models.Batch;
+}
+
+const Batch: Model<IBatch> = mongoose.models.Batch || mongoose.model<IBatch>('Batch', BatchSchema);
 
 export default Batch;

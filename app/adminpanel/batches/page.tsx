@@ -4,20 +4,48 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { connectToDatabase } from '@/lib/db';
 import Batch from '@/models/Batch';
 import Course from '@/models/Course';
-import { Layers, Plus, Calendar, Clock, Users, BookOpen } from 'lucide-react';
+import Enrollment from '@/models/Enrollment';
+import Order from '@/models/Order';
+import { Layers, Calendar, Clock, BookOpen, ExternalLink, ArrowRight } from 'lucide-react';
 import BatchFormModal from './BatchFormModal';
 
 export default async function AdminPanelBatchesPage() {
   await getServerSession(authOptions);
   await connectToDatabase();
 
-  const [batchDocs, courseDocs] = await Promise.all([
+  const [batchDocs, courseDocs, enrollmentDocs, paidOrderDocs] = await Promise.all([
     Batch.find().populate('courseId', 'title slug subject price').sort({ createdAt: -1 }).lean(),
     Course.find({ status: 'published' }).select('_id title subject').sort({ title: 1 }).lean(),
+    Enrollment.find().select('courseId').lean(),
+    Order.find({ status: 'paid' }).select('courseId').lean(),
   ]);
 
-  const batches = JSON.parse(JSON.stringify(batchDocs));
+  const rawBatches = JSON.parse(JSON.stringify(batchDocs));
   const courses = JSON.parse(JSON.stringify(courseDocs));
+  const enrollments = JSON.parse(JSON.stringify(enrollmentDocs));
+  const paidOrders = JSON.parse(JSON.stringify(paidOrderDocs));
+
+  // Compute dynamic enrolled counts per batch
+  const batches = rawBatches.map((b: any) => {
+    const courseIdStr = b.courseId?._id?.toString() || b.courseId?.toString() || '';
+    
+    // Count enrollments for this course
+    const enrollmentCount = enrollments.filter(
+      (e: any) => (e.courseId?._id?.toString() || e.courseId?.toString()) === courseIdStr
+    ).length;
+
+    // Count paid orders for this course
+    const paidOrderCount = paidOrders.filter(
+      (o: any) => (o.courseId?._id?.toString() || o.courseId?.toString()) === courseIdStr
+    ).length;
+
+    const dynamicEnrolled = Math.max(b.enrolledCount || 0, enrollmentCount, paidOrderCount);
+
+    return {
+      ...b,
+      enrolledCount: dynamicEnrolled,
+    };
+  });
 
   const totalBatches = batches.length;
   const activeBatches = batches.filter((b: any) => b.status === 'active').length;
@@ -87,74 +115,92 @@ export default async function AdminPanelBatchesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {batches.map((b: any) => (
-              <div
-                key={b._id}
-                className="bg-slate-50 rounded-2xl border border-slate-200 p-6 space-y-4 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
-                      b.status === 'active'
-                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                        : b.status === 'upcoming'
-                        ? 'bg-amber-100 text-amber-800 border-amber-300'
-                        : 'bg-slate-200 text-slate-700 border-slate-300'
-                    }`}
-                  >
-                    {b.status}
-                  </span>
-                  <span className="text-xs font-mono font-bold text-slate-500">
-                    Cap: {b.enrolledCount || 0} / {b.maxStudents || 30}
-                  </span>
-                </div>
+            {batches.map((b: any) => {
+              const targetUrl = `/adminpanel/batches/${b._id}`;
 
-                <div className="space-y-1">
-                  <h3 className="text-lg font-bold text-[#0b2545]">{b.name}</h3>
-                  <p className="text-xs font-semibold text-amber-600 flex items-center gap-1">
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>{b.courseId?.title || 'General Course'}</span>
-                  </p>
-                </div>
-
-                <div className="space-y-2 pt-2 border-t border-slate-200 text-xs text-slate-600">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
-                    <span>Schedule: <strong>{b.classSchedule}</strong></span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-amber-500 shrink-0" />
-                    <span>
-                      Start Date:{' '}
-                      <strong>
-                        {b.startDate
-                          ? new Date(b.startDate).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              year: 'numeric',
-                            })
-                          : 'TBA'}
-                      </strong>
+              return (
+                <Link
+                  key={b._id}
+                  href={targetUrl}
+                  className="block bg-slate-50 hover:bg-white rounded-2xl border border-slate-200 hover:border-indigo-300 p-6 space-y-4 shadow-sm hover:shadow-xl transition-all duration-200 group relative cursor-pointer"
+                >
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                        b.status === 'active'
+                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                          : b.status === 'upcoming'
+                          ? 'bg-amber-100 text-amber-800 border-amber-300'
+                          : 'bg-slate-200 text-slate-700 border-slate-300'
+                      }`}
+                    >
+                      {b.status}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-slate-700 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs">
+                      Cap: <strong className="text-emerald-700 font-extrabold">{b.enrolledCount || 0}</strong> / {b.maxStudents || 30}
                     </span>
                   </div>
-                </div>
 
-                {/* Progress bar */}
-                <div className="space-y-1 pt-1">
-                  <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                    <div
-                      className="bg-[#0b2545] h-1.5 rounded-full transition-all"
-                      style={{
-                        width: `${Math.min(
-                          100,
-                          Math.round(((b.enrolledCount || 0) / (b.maxStudents || 30)) * 100)
-                        )}%`,
-                      }}
-                    ></div>
+                  <div className="space-y-1 pt-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-[#0b2545] group-hover:text-indigo-600 transition-colors">
+                        {b.name}
+                      </h3>
+                      <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors shrink-0" />
+                    </div>
+                    <p className="text-xs font-semibold text-amber-600 flex items-center gap-1">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>{b.courseId?.title || 'General Course'}</span>
+                    </p>
                   </div>
-                </div>
-              </div>
-            ))}
+
+                  <div className="space-y-2 pt-2 border-t border-slate-200 text-xs text-slate-600">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-indigo-600 shrink-0" />
+                      <span>Schedule: <strong>{b.classSchedule}</strong></span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-amber-500 shrink-0" />
+                      <span>
+                        Start Date:{' '}
+                        <strong>
+                          {b.startDate
+                            ? new Date(b.startDate).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })
+                            : 'TBA'}
+                        </strong>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-[#0b2545] group-hover:bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${Math.max(
+                            4,
+                            Math.min(
+                              100,
+                              Math.round(((b.enrolledCount || 0) / (b.maxStudents || 30)) * 100)
+                            )
+                          )}%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] font-bold text-indigo-600 pt-1 group-hover:text-indigo-800 transition-colors">
+                    <span>View Batch & Course Details</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

@@ -2,35 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { connectToDatabase } from '@/lib/db';
-import mongoose from 'mongoose';
-
-const UserSchema = new mongoose.Schema({ email: String, role: String });
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
-
-const CourseSchema = new mongoose.Schema({
-  title: String,
-  slug: String,
-  description: String,
-  subject: String,
-  level: String,
-  syllabus: [String],
-  modules: [
-    {
-      title: String,
-      type: { type: String },
-      url: String,
-      durationMinutes: Number,
-    },
-  ],
-});
-const Course = mongoose.models.Course || mongoose.model('Course', CourseSchema);
-
-const EnrollmentSchema = new mongoose.Schema({
-  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
-  progressPercentage: { type: Number, default: 0 },
-});
-const Enrollment = mongoose.models.Enrollment || mongoose.model('Enrollment', EnrollmentSchema);
+import User from '@/models/User';
+import Course from '@/models/Course';
+import Enrollment from '@/models/Enrollment';
+import Order from '@/models/Order';
+import Batch from '@/models/Batch';
 
 export async function GET(
   request: NextRequest,
@@ -51,10 +27,17 @@ export async function GET(
       return NextResponse.json({ isEnrolled: false, message: 'Student not found' }, { status: 404 });
     }
 
-    const course = await Course.findById(courseId).lean();
+    let course = await Course.findById(courseId).lean();
+    if (!course) {
+      // Fallback: try finding by slug
+      course = await Course.findOne({ slug: courseId }).lean();
+    }
+
     if (!course) {
       return NextResponse.json({ isEnrolled: false, message: 'Course not found' }, { status: 404 });
     }
+
+    const realCourseId = (course as any)._id.toString();
 
     // Check if enrolled or if user is admin
     let enrollment = await Enrollment.findOne({
@@ -65,14 +48,7 @@ export async function GET(
     const isAdmin = student.role === 'admin' || (session.user as any)?.role === 'admin';
 
     if (!enrollment && !isAdmin) {
-      // If student recently paid or is attempting to view, check orders as well
-      const OrderSchema = new mongoose.Schema({
-        studentId: mongoose.Schema.Types.ObjectId,
-        courseId: mongoose.Schema.Types.ObjectId,
-        status: String,
-      });
-      const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
-
+      // Check paid order
       const order = await Order.findOne({
         studentId: student._id,
         courseId: (course as any)._id,
@@ -90,6 +66,13 @@ export async function GET(
         return NextResponse.json({ isEnrolled: false, message: 'Student is not enrolled' });
       }
     }
+
+    // Fetch corresponding Batch details (Live Meet Link, WhatsApp Group Link, Notice, Materials)
+    const batch = await Batch.findOne({
+      $or: [{ courseId: (course as any)._id }, { courseId: realCourseId }],
+    })
+      .sort({ createdAt: -1 })
+      .lean();
 
     // Provide default interactive learning modules if course.modules is empty
     let modules = (course as any).modules || [];
@@ -119,8 +102,9 @@ export async function GET(
 
     return NextResponse.json({
       isEnrolled: true,
-      course,
-      enrollment: enrollment || { progressPercentage: 100 },
+      course: JSON.parse(JSON.stringify(course)),
+      enrollment: enrollment ? JSON.parse(JSON.stringify(enrollment)) : { progressPercentage: 100 },
+      batch: batch ? JSON.parse(JSON.stringify(batch)) : null,
     });
   } catch (error: any) {
     console.error('Learn page API error:', error);

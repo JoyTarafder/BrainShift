@@ -17,6 +17,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { fetchApi } from '@/lib/api';
+import { useSession } from 'next-auth/react';
 
 interface OrderItem {
   _id: string;
@@ -40,6 +41,9 @@ interface OrderItem {
 }
 
 export default function AdminPaymentsPage() {
+  const { data: session } = useSession();
+  const token = (session?.user as any)?.apiToken;
+
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -48,11 +52,18 @@ export default function AdminPaymentsPage() {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [copiedTrx, setCopiedTrx] = useState<string | null>(null);
 
+  const getHeaders = () => ({
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  });
+
   const loadPayments = async () => {
     setLoading(true);
     setError('');
     try {
-      const data = await fetchApi('/admin/payments');
+      const data = await fetchApi('/admin/payments', {
+        headers: getHeaders(),
+      });
       if (data && data.success) {
         setOrders(data.orders || []);
       } else {
@@ -67,14 +78,14 @@ export default function AdminPaymentsPage() {
 
   useEffect(() => {
     loadPayments();
-  }, []);
+  }, [session]);
 
   const handleUpdateStatus = async (orderId: string, newStatus: 'paid' | 'failed' | 'pending') => {
     setUpdatingId(orderId);
     try {
       const data = await fetchApi('/admin/payments', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify({ orderId, status: newStatus }),
       });
 

@@ -7,10 +7,29 @@ import Enrollment from '@/models/Enrollment';
 import User from '@/models/User';
 import Course from '@/models/Course';
 
+async function verifyAdminAccess(request: NextRequest): Promise<boolean> {
+  await connectToDatabase();
+
+  // 1. Check NextAuth Session
+  const session = await getServerSession(authOptions);
+  if (session?.user) {
+    const role = (session.user as any)?.role;
+    if (role === 'admin') return true;
+
+    if (session.user.email) {
+      const dbUser = await User.findOne({ email: session.user.email.toLowerCase().trim() }).lean();
+      if (dbUser && dbUser.role === 'admin') return true;
+    }
+  }
+
+  // 2. Fallback: Check if any admin user exists or if admin session is active
+  return false;
+}
+
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || (session.user as any)?.role !== 'admin') {
+    const isAdminAuthorized = await verifyAdminAccess(request);
+    if (!isAdminAuthorized) {
       return NextResponse.json({ success: false, message: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
@@ -35,8 +54,8 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || (session.user as any)?.role !== 'admin') {
+    const isAdminAuthorized = await verifyAdminAccess(request);
+    if (!isAdminAuthorized) {
       return NextResponse.json({ success: false, message: 'Unauthorized. Admin access required.' }, { status: 401 });
     }
 
