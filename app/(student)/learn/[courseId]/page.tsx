@@ -87,7 +87,9 @@ export default function CourseLearnPage() {
       } else if (url.includes('youtube.com/embed/')) {
         videoId = url.split('youtube.com/embed/')[1]?.split('?')[0];
       }
-      return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : null;
+      return videoId
+        ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&showinfo=0`
+        : null;
     } catch (e) {
       return null;
     }
