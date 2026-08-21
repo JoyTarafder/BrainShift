@@ -153,20 +153,14 @@ export default function PlyrVideoPlayer({
         {/* Dynamic User Email Floating Watermark */}
         {renderWatermark()}
 
-        {/* TutorNova Brand Shield Overlay covering top-right popout icon & blocking clicks */}
+        {/* Transparent Click Shield covering top-right popout icon */}
         <div
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
           }}
-          className="absolute top-0 right-0 z-40 bg-[#0b2545] p-3 pt-2.5 pr-4 rounded-bl-2xl rounded-tr-3xl border-b border-l border-amber-500/40 shadow-2xl flex items-center justify-center cursor-default select-none"
-        >
-          <img
-            src="/images/logo.png"
-            alt="TutorNova"
-            className="h-7 sm:h-8 w-auto object-contain"
-          />
-        </div>
+          className="absolute top-0 right-0 z-40 w-16 h-16 pointer-events-auto bg-transparent select-none"
+        />
       </div>
     );
   }
@@ -184,21 +178,6 @@ export default function PlyrVideoPlayer({
         />
         {/* Dynamic User Email Floating Watermark */}
         {renderWatermark()}
-
-        {/* TutorNova Brand Shield Overlay covering top-right corner */}
-        <div
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          className="absolute top-0 right-0 z-40 bg-[#0b2545] p-3 pt-2.5 pr-4 rounded-bl-2xl rounded-tr-3xl border-b border-l border-amber-500/40 shadow-2xl flex items-center justify-center cursor-default select-none"
-        >
-          <img
-            src="/images/logo.png"
-            alt="TutorNova"
-            className="h-7 sm:h-8 w-auto object-contain"
-          />
-        </div>
       </div>
     );
   }
@@ -217,21 +196,6 @@ export default function PlyrVideoPlayer({
       />
       {/* Dynamic User Email Floating Watermark */}
       {renderWatermark()}
-
-      {/* TutorNova Brand Shield Overlay covering top-right corner */}
-      <div
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-        className="absolute top-0 right-0 z-40 bg-[#0b2545] p-3 pt-2.5 pr-4 rounded-bl-2xl rounded-tr-3xl border-b border-l border-amber-500/40 shadow-2xl flex items-center justify-center cursor-default select-none"
-      >
-        <img
-          src="/images/logo.png"
-          alt="TutorNova"
-          className="h-7 sm:h-8 w-auto object-contain"
-        />
-      </div>
     </div>
   );
 }

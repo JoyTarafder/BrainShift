@@ -420,36 +420,36 @@ export default function CourseLearnPage() {
       <header className="sticky top-0 z-40 bg-slate-950/85 backdrop-blur-2xl border-b border-slate-800/80 px-4 sm:px-6 py-3 transition-all">
         <div className="max-w-[1700px] mx-auto flex items-center justify-between gap-4">
           {/* Left: Back Button & Course Identity */}
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors bg-slate-900/90 hover:bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-800 shrink-0 shadow-sm"
+              className="inline-flex items-center gap-1.5 sm:gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors bg-slate-900/90 hover:bg-slate-800 px-2.5 sm:px-3.5 py-2 rounded-xl border border-slate-800 shrink-0 shadow-sm"
               title="Return to Student Dashboard"
             >
               <ArrowLeft className="w-4 h-4 text-amber-400" />
               <span className="hidden sm:inline">Dashboard</span>
             </Link>
 
-            <div className="min-w-0 border-l border-slate-800/80 pl-3">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-md border border-amber-500/20">
+            <div className="min-w-0 border-l border-slate-800/80 pl-2 sm:pl-3 flex-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 overflow-hidden">
+                <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 sm:px-2.5 py-0.5 rounded-md border border-amber-500/20 truncate max-w-[140px] xs:max-w-[190px] sm:max-w-none">
                   {course?.subject} • {course?.level}
                 </span>
                 {batch?.name && (
-                  <span className="text-[10px] font-bold text-slate-300 bg-slate-900 px-2.5 py-0.5 rounded-md border border-slate-800 flex items-center gap-1 hidden md:flex">
+                  <span className="text-[10px] font-bold text-slate-300 bg-slate-900 px-2.5 py-0.5 rounded-md border border-slate-800 items-center gap-1 hidden md:flex shrink-0">
                     <Layers className="w-3 h-3 text-indigo-400" />
                     <span>{batch.name}</span>
                   </span>
                 )}
               </div>
-              <h1 className="text-sm sm:text-base font-extrabold text-white truncate max-w-[280px] sm:max-w-md lg:max-w-lg mt-0.5">
+              <h1 className="text-xs sm:text-base font-extrabold text-white truncate max-w-[120px] xs:max-w-[170px] sm:max-w-md lg:max-w-lg mt-0.5">
                 {course?.title}
               </h1>
             </div>
           </div>
 
           {/* Right: Actions, Live Pill, Progress & Playlist Toggle */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Live Class Indicator */}
             {batch?.meetUrl && (
               <a
@@ -466,13 +466,13 @@ export default function CourseLearnPage() {
               </a>
             )}
 
-            {/* Overall Course Progress Bar (Expanded & Prominent) */}
-            <div className="flex items-center gap-3 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-800 shadow-md">
+            {/* Overall Course Progress Bar (Desktop & Tablet) */}
+            <div className="hidden sm:flex items-center gap-3 bg-slate-900/90 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border border-slate-800 shadow-md shrink-0">
               <div className="flex flex-col text-right shrink-0">
                 <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Progress</span>
                 <span className="text-xs font-mono font-black text-amber-400">{progress}%</span>
               </div>
-              <div className="w-32 sm:w-44 md:w-56 bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800/80 p-0.5">
+              <div className="w-24 sm:w-44 md:w-56 bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800/80 p-0.5">
                 <div
                   className="bg-gradient-to-r from-amber-500 via-amber-400 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
                   style={{ width: `${progress}%` }}
@@ -480,10 +480,16 @@ export default function CourseLearnPage() {
               </div>
             </div>
 
+            {/* Mobile-only Compact Progress Badge */}
+            <div className="sm:hidden flex flex-col items-center justify-center bg-slate-900/90 px-2 py-1 rounded-xl border border-slate-800 text-center shrink-0">
+              <span className="text-[8px] uppercase font-bold text-slate-400 leading-none">Prog</span>
+              <span className="text-[10px] font-mono font-black text-amber-400 leading-tight">{progress}%</span>
+            </div>
+
             {/* Toggle Playlist Sidebar Button */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={`p-2 rounded-xl border transition-all ${
+              className={`p-2 rounded-xl border transition-all shrink-0 ${
                 isSidebarOpen
                   ? "bg-amber-500/10 border-amber-500/40 text-amber-400"
                   : "bg-slate-900 border-slate-800 text-slate-300 hover:text-white"

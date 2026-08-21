@@ -49,12 +49,12 @@ export default function Home() {
                 <span>Private Tuition & Academic Mentorship</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
                 Class 5–10, Inter ICT & CS Tuition with{" "}
                 <span className="text-amber-400">TutorNova</span>
               </h1>
 
-              <p className="text-lg text-slate-300 max-w-2xl">
+              <p className="text-base sm:text-lg text-slate-300 max-w-2xl">
                 Expert 1-on-1 and group tuition by <strong>Joy Tarafder</strong> (CSE @ IUB). Specializing in 
                 <span className="text-amber-300 font-semibold"> Class 5–8 (All Subjects)</span>, 
                 <span className="text-amber-300 font-semibold"> Class 9–10 (Science Only)</span>, 
@@ -62,7 +62,7 @@ export default function Home() {
               </p>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start pt-2">
                 <Link
                   href="/about"
                   className="inline-flex items-center justify-center px-6 py-3.5 rounded-xl font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/30 transition-all duration-200"
@@ -79,18 +79,18 @@ export default function Home() {
               </div>
 
               {/* Credentials Trust Badges */}
-              <div className="pt-8 border-t border-slate-700/60 grid grid-cols-3 gap-4 text-center lg:text-left">
+              <div className="pt-8 border-t border-slate-700/60 grid grid-cols-3 gap-2 sm:gap-4 text-center lg:text-left">
                 <div>
-                  <p className="text-xl sm:text-2xl font-bold text-amber-400">Class 5–10</p>
-                  <p className="text-xs text-slate-400">All Subjects & Science</p>
+                  <p className="text-base sm:text-2xl font-bold text-amber-400">Class 5–10</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">All Subjects & Science</p>
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-bold text-white">Inter ICT</p>
-                  <p className="text-xs text-slate-400">Class 11–12 HSC</p>
+                  <p className="text-base sm:text-2xl font-bold text-white">Inter ICT</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">Class 11–12 HSC</p>
                 </div>
                 <div>
-                  <p className="text-xl sm:text-2xl font-bold text-amber-400">CSE @ IUB</p>
-                  <p className="text-xs text-slate-400">CloudCoder Intern</p>
+                  <p className="text-base sm:text-2xl font-bold text-amber-400">CSE @ IUB</p>
+                  <p className="text-[10px] sm:text-xs text-slate-400">CloudCoder Intern</p>
                 </div>
               </div>
             </div>
