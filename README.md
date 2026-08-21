@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TutorNova — Private Tuition Platform
 
-## Getting Started
+> **Expert 1-on-1 and group tuition by Joy Tarafder (CSE @ IUB)**  
+> Specializing in Class 5–8 (All Subjects), Class 9–10 (Science Only), Inter ICT, and University Computer Science & Coding.
 
-First, run the development server:
+---
+
+## 🎓 Tuition Coverage
+
+| Level | Subjects |
+|---|---|
+| **Class 5 – 8** | All Subjects (সকল বিষয়) |
+| **Class 9 – 10** | Science Group — Physics, Chemistry, Higher Math, Biology, ICT |
+| **HSC / Inter (11–12)** | ICT (Chapter 1–6) |
+| **University / CSE & Coding** | C/C++, Java, Web Dev, DSA, Software Engineering & Industry Internship Guidance |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 15 (App Router), Tailwind CSS, TypeScript |
+| **Backend API** | Node.js, Express.js |
+| **Database** | MongoDB Atlas |
+| **Video Player** | Plyr.js (YouTube & Google Drive) |
+| **Auth** | JWT-based Authentication |
+| **Deployment** | Vercel (Frontend) + Render/Railway (Backend) |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- MongoDB Atlas URI
+- Google Drive / YouTube video links for lessons
+
+### Frontend
 
 ```bash
+cd tuitionBd
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Backend API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-## Learn More
+Backend runs at [http://localhost:5000](http://localhost:5000).
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚙️ Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontend — `.env.local`
 
-## Deploy on Vercel
+```env
+MONGODB_URI=your_mongodb_atlas_uri
+NEXTAUTH_SECRET=your_secret
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Backend — `backend/.env`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+MONGODB_URI=your_mongodb_atlas_uri
+JWT_SECRET=your_jwt_secret
+PORT=5000
+```
+
+---
+
+## 📁 Project Structure
+
+```
+tuitionBd/
+├── app/                    # Next.js App Router pages
+│   ├── page.tsx            # Home / Landing page
+│   ├── about/              # About Joy Tarafder
+│   ├── courses/            # Course catalog & filters
+│   ├── adminpanel/         # Admin dashboard
+│   └── (student)/learn/    # Student video lesson player
+├── components/             # Shared UI components
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   └── PlyrVideoPlayer.tsx # Video player with watermark protection
+├── backend/                # Express.js REST API
+│   └── routes/             # API routes
+└── public/                 # Static assets
+```
+
+---
+
+## 🔒 Content Protection Features
+
+- **Dynamic Email Watermark** — Logged-in student's email floats over video to deter piracy.
+- **Google Drive Popout Shield** — Transparent overlay blocks the external popout button on Google Drive embeds.
+
+---
+
+## 👨‍💻 Developer
+
+**Joy Tarafder**  
+B.Sc. in Computer Science & Engineering — Independent University, Bangladesh (IUB), 2020–2025
+
+- 🏫 Ghatail Cantonment College — HSC (Science) GPA 5.00 (2017–2019)
+- 🏫 Kalihati R.S. Govt. Pilot High School — SSC (Science) GPA 5.00 (2012–2017)
+
+---
+
+## 📄 License
+
+This project is private and proprietary. All rights reserved © Joy Tarafder.
