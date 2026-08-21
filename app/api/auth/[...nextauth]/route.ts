@@ -61,24 +61,25 @@ export const authOptions: AuthOptions = {
         }
 
         // 2. Direct MongoDB Atlas authentication fallback
+        let user = null;
         try {
           await connectToDatabase();
-          const user = await User.findOne({ email: emailClean });
-
-          if (user && (await bcrypt.compare(credentials.password, user.password))) {
-            return {
-              id: user._id.toString(),
-              name: user.name,
-              email: user.email,
-              role: user.role,
-            };
-          }
-
-          throw new Error('Invalid email or password');
+          user = await User.findOne({ email: emailClean });
         } catch (dbErr: any) {
-          console.error('Database Auth Error:', dbErr);
-          throw new Error(dbErr?.message || 'Invalid email or password');
+          console.error('Database Connection Error during auth:', dbErr);
+          throw new Error('Database connection failed. Please try again.');
         }
+
+        if (user && (await bcrypt.compare(credentials.password, user.password))) {
+          return {
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          };
+        }
+
+        return null;
       },
     }),
   ],
@@ -112,7 +113,7 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET || 'tutornova-super-secret-key-change-in-production-2026',
+  secret: process.env.NEXTAUTH_SECRET || 'tutornova_super_secret_jwt_key_2026',
 };
 
 const handler = NextAuth(authOptions);

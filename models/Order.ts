@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IOrder extends Document {
   studentId: mongoose.Types.ObjectId | string;
   courseId: mongoose.Types.ObjectId | string;
+  batchId?: mongoose.Types.ObjectId | string;
   amount: number;
   status: 'pending' | 'paid' | 'failed' | 'refunded';
   paymentMethod: string;
@@ -16,6 +17,7 @@ const OrderSchema = new Schema<IOrder>(
   {
     studentId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    batchId: { type: Schema.Types.ObjectId, ref: 'Batch' },
     amount: { type: Number, required: true },
     status: {
       type: String,

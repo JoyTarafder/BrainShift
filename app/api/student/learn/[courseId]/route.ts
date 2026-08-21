@@ -106,11 +106,44 @@ export async function GET(
     }
 
     // Fetch corresponding Batch details (Live Meet Link, WhatsApp Group Link, Notice, Materials, Video Lessons)
-    const batch = await Batch.findOne({
-      $or: [{ courseId: (course as any)._id }, { courseId: realCourseId }],
-    })
-      .sort({ createdAt: -1 })
-      .lean();
+    let batch: any = null;
+
+    // 1. Prioritize assigned batch from student enrollment first
+    if (enrollment?.batchId) {
+      batch = await Batch.findById(enrollment.batchId).lean();
+    }
+
+    // 2. Fallback to active batch under this course that has meetUrl set
+    if (!batch || !batch.meetUrl) {
+      const meetBatch = await Batch.findOne({
+        $or: [{ courseId: (course as any)._id }, { courseId: realCourseId }],
+        meetUrl: { $exists: true, $ne: '' },
+      })
+        .sort({ createdAt: -1 })
+        .lean();
+
+      if (meetBatch) {
+        if (!batch) {
+          batch = meetBatch;
+        } else {
+          batch = {
+            ...batch,
+            meetUrl: meetBatch.meetUrl || batch.meetUrl,
+            whatsappUrl: meetBatch.whatsappUrl || batch.whatsappUrl,
+            notice: meetBatch.notice || batch.notice,
+          };
+        }
+      }
+    }
+
+    // 3. Fallback to latest batch created for this course
+    if (!batch) {
+      batch = await Batch.findOne({
+        $or: [{ courseId: (course as any)._id }, { courseId: realCourseId }],
+      })
+        .sort({ createdAt: -1 })
+        .lean();
+    }
 
     // Prioritize Admin-updated modules from Batch first, then Course, then default fallback
     let modules =

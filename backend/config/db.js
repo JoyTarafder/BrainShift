@@ -13,8 +13,9 @@ setFallbackDns();
 
 export const connectDB = async () => {
   setFallbackDns();
+  const mongoUri = process.env.MONGODB_URI || "mongodb+srv://joytarafder3_db_user:RjtIYMhrvpyIedqq@tutornovacluster.kvt11zd.mongodb.net/tutornova?retryWrites=true&w=majority&appName=TutorNovaCluster";
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    const conn = await mongoose.connect(mongoUri, {
       bufferCommands: false,
       serverSelectionTimeoutMS: 10000,
     });
@@ -25,7 +26,7 @@ export const connectDB = async () => {
       console.warn('⚠️ DNS SRV ECONNREFUSED encountered in backend. Retrying connection with Google Public DNS...');
       setFallbackDns();
       try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+        const conn = await mongoose.connect(mongoUri, {
           bufferCommands: false,
           serverSelectionTimeoutMS: 10000,
         });

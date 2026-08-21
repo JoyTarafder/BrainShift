@@ -466,7 +466,7 @@ export default function AdminBatchDetailPage() {
   const handleAddLesson = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!lessonTitle.trim() || !lessonUrl.trim()) {
-      setError('Please provide Class Title and YouTube Video Link');
+      setError('Please provide Class Title and Video Link (YouTube or Google Drive)');
       return;
     }
 
@@ -888,14 +888,14 @@ export default function AdminBatchDetailPage() {
 
               <div className="sm:col-span-4">
                 <label className="block text-xs font-extrabold text-slate-800 mb-1">
-                  YouTube Video Link / URL *
+                  YouTube / Google Drive Video Link *
                 </label>
                 <input
                   type="url"
                   required
                   value={lessonUrl}
                   onChange={(e) => setLessonUrl(e.target.value)}
-                  placeholder="e.g. https://www.youtube.com/watch?v=RBSGKlAvoiM"
+                  placeholder="e.g. https://youtu.be/... or https://drive.google.com/file/d/..."
                   className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
                 />
               </div>
@@ -1029,13 +1029,14 @@ export default function AdminBatchDetailPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-800 mb-1">
-                  YouTube Video Link / URL *
+                  YouTube / Google Drive Video Link *
                 </label>
                 <input
                   type="url"
                   required
                   value={editUrl}
                   onChange={(e) => setEditUrl(e.target.value)}
+                  placeholder="e.g. https://drive.google.com/file/d/..."
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545] focus:bg-white"
                 />
               </div>

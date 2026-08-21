@@ -16,11 +16,11 @@ export async function GET(request: NextRequest) {
     const query: any = { status: 'published' };
 
     if (subject && subject !== 'All') {
-      query.subject = subject;
+      query.subject = { $regex: subject.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '.*'), $options: 'i' };
     }
 
     if (level && level !== 'All') {
-      query.level = level;
+      query.level = { $regex: level.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '.*'), $options: 'i' };
     }
 
     if (search) {

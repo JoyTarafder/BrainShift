@@ -91,15 +91,21 @@ export default async function AdminPanelOverviewPage() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          {/* Backend API Health Status Badge */}
-          <div className="inline-flex items-center gap-2 bg-slate-900/90 text-xs px-4 py-3 rounded-xl border border-slate-700/80 shadow">
-            <Server className="w-4 h-4 text-amber-400" />
-            <span className="font-mono text-slate-300">Backend API:</span>
+          {/* Backend API & DB Health Status Link */}
+          <Link
+            href="/api/health"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-slate-900/90 text-xs px-4 py-3 rounded-xl border border-slate-700/80 shadow hover:border-amber-500/50 hover:bg-slate-800 transition-all group"
+            title="Check Live DB & API Health Status (/api/health)"
+          >
+            <Server className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+            <span className="font-mono text-slate-300">DB Health Status:</span>
             <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-800/60">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              Atlas Online (Express)
+              Live Status ↗
             </span>
-          </div>
+          </Link>
 
           <Link
             href="/adminpanel/courses/new"

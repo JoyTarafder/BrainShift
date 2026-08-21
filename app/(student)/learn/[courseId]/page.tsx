@@ -83,7 +83,27 @@ export default function CourseLearnPage() {
   const [examSubmissionNotes, setExamSubmissionNotes] = useState<string>("");
   const [submittingWrittenExam, setSubmittingWrittenExam] = useState<boolean>(false);
 
+  // Completed modules tracking for single-click disabling per lesson
+  const [completedModules, setCompletedModules] = useState<string[]>([]);
+
   const token = (session?.user as any)?.apiToken;
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && courseId) {
+      try {
+        const saved = localStorage.getItem(`completed_modules_${courseId}`);
+        if (saved) {
+          setCompletedModules(JSON.parse(saved));
+        }
+      } catch {}
+    }
+  }, [courseId]);
+
+  const isCurrentLessonCompleted = useMemo(() => {
+    if (!activeModule) return false;
+    const key = activeModule.url || activeModule.title;
+    return completedModules.includes(key);
+  }, [activeModule, completedModules]);
 
   useEffect(() => {
     if (!courseId) return;
@@ -254,12 +274,21 @@ export default function CourseLearnPage() {
   };
 
   const handleMarkProgress = async () => {
-    if (!course?.modules?.length) return;
+    if (!course?.modules?.length || !activeModule) return;
+    const key = activeModule.url || activeModule.title;
+    if (completedModules.includes(key)) return;
+
     setUpdatingProgress(true);
+    const newCompleted = [...completedModules, key];
+    setCompletedModules(newCompleted);
+
+    try {
+      localStorage.setItem(`completed_modules_${courseId}`, JSON.stringify(newCompleted));
+    } catch {}
 
     const newProgress = Math.min(
       100,
-      Math.round(progress + 100 / course.modules.length)
+      Math.round((newCompleted.length / course.modules.length) * 100)
     );
 
     try {
@@ -437,40 +466,18 @@ export default function CourseLearnPage() {
               </a>
             )}
 
-            {/* Official WhatsApp Shortcut */}
-            <a
-              href={batch?.whatsappUrl?.trim() ? batch.whatsappUrl.trim() : "#"}
-              onClick={handleJoinWhatsappClick}
-              target={batch?.whatsappUrl?.trim() ? "_blank" : "_self"}
-              rel="noopener noreferrer"
-              className="hidden lg:inline-flex items-center gap-1.5 text-xs font-bold bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-300 px-3 py-1.5 rounded-xl border border-emerald-800/80 transition-colors"
-            >
-              <img
-                src="/images/whatsapp-clean-icon.png"
-                alt="WhatsApp"
-                className="w-4 h-4 object-contain"
-              />
-              <span>Group</span>
-            </a>
-
-            {/* Overall Course Progress Bar */}
-            <div className="hidden sm:flex items-center gap-2.5 bg-slate-900/90 px-3.5 py-1.5 rounded-xl border border-slate-800">
-              <div className="flex flex-col text-right">
-                <span className="text-[9px] uppercase font-bold text-slate-400">Progress</span>
+            {/* Overall Course Progress Bar (Expanded & Prominent) */}
+            <div className="flex items-center gap-3 bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-800 shadow-md">
+              <div className="flex flex-col text-right shrink-0">
+                <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Progress</span>
                 <span className="text-xs font-mono font-black text-amber-400">{progress}%</span>
               </div>
-              <div className="w-16 bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700/50">
+              <div className="w-32 sm:w-44 md:w-56 bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800/80 p-0.5">
                 <div
-                  className="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-amber-500 via-amber-400 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
-            </div>
-
-            {/* Verified Student Badge */}
-            <div className="hidden xl:flex items-center gap-1.5 text-[10px] font-extrabold bg-emerald-950/80 text-emerald-300 px-3 py-1.5 rounded-xl border border-emerald-800/60">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Verified Student</span>
             </div>
 
             {/* Toggle Playlist Sidebar Button */}
@@ -610,7 +617,12 @@ export default function CourseLearnPage() {
                 {/* CINEMA VIDEO PLAYER FRAME */}
                 <div className="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl aspect-video relative group">
                   {activeModule?.url && (activeModule.type === "video" || embedUrl) ? (
-                    <PlyrVideoPlayer key={activeModule.url} url={activeModule.url} title={activeModule.title} />
+                    <PlyrVideoPlayer
+                      key={activeModule.url}
+                      url={activeModule.url}
+                      title={activeModule.title}
+                      userEmail={session?.user?.email || "student@tutornova.com"}
+                    />
                   ) : activeModule?.url ? (
                     <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center space-y-4 bg-slate-950">
                       {activeModule.type === "pdf" ? (
@@ -688,12 +700,26 @@ export default function CourseLearnPage() {
                       {/* Mark Completed Button */}
                       <button
                         onClick={handleMarkProgress}
-                        disabled={updatingProgress}
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition-all shrink-0 disabled:opacity-50"
+                        disabled={updatingProgress || isCurrentLessonCompleted}
+                        className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold shadow-md transition-all shrink-0 ${
+                          isCurrentLessonCompleted
+                            ? "bg-slate-800/90 text-emerald-400 border border-emerald-500/40 cursor-not-allowed opacity-90 shadow-none"
+                            : "bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-50"
+                        }`}
                       >
-                        <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                        <CheckCircle2
+                          className={`w-4 h-4 ${
+                            isCurrentLessonCompleted
+                              ? "text-emerald-400"
+                              : "text-emerald-300"
+                          }`}
+                        />
                         <span>
-                          {updatingProgress ? "Updating..." : "Mark Complete"}
+                          {updatingProgress
+                            ? "Updating..."
+                            : isCurrentLessonCompleted
+                            ? "Completed ✓"
+                            : "Mark Complete"}
                         </span>
                       </button>
                     </div>
@@ -1346,6 +1372,7 @@ export default function CourseLearnPage() {
                       const isActive =
                         activeModule?.url === mod.url &&
                         activeModule?.title === mod.title;
+                      const isModCompleted = completedModules.includes(mod.url || mod.title);
 
                       return (
                         <button
@@ -1357,6 +1384,8 @@ export default function CourseLearnPage() {
                           className={`w-full text-left p-3 rounded-2xl border transition-all flex items-start gap-3 group ${
                             isActive
                               ? "bg-gradient-to-r from-[#0b2545] to-slate-900 border-amber-500/80 text-white shadow-lg shadow-amber-500/5"
+                              : isModCompleted
+                              ? "bg-slate-950/80 hover:bg-slate-900 border-emerald-900/50 text-slate-300"
                               : "bg-slate-950 hover:bg-slate-800/80 border-slate-800/80 text-slate-300"
                           }`}
                         >
@@ -1364,15 +1393,17 @@ export default function CourseLearnPage() {
                             className={`w-7 h-7 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
                               isActive
                                 ? "bg-amber-500 text-slate-950"
+                                : isModCompleted
+                                ? "bg-emerald-950 text-emerald-400 border border-emerald-800"
                                 : "bg-slate-900 text-slate-400 border border-slate-800 group-hover:border-slate-700"
                             }`}
                           >
-                            {idx + 1}
+                            {isModCompleted ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : idx + 1}
                           </div>
 
                           <div className="min-w-0 flex-1 space-y-0.5">
-                            <span className="font-bold block text-xs line-clamp-2 leading-snug group-hover:text-white">
-                              {mod.title}
+                            <span className="font-bold block text-xs line-clamp-2 leading-snug group-hover:text-white flex items-center gap-1.5">
+                              <span>{mod.title}</span>
                             </span>
                             <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
                               <span className="uppercase">{mod.type}</span>
@@ -1380,6 +1411,12 @@ export default function CourseLearnPage() {
                                 <>
                                   <span>•</span>
                                   <span>{mod.durationMinutes}m</span>
+                                </>
+                              )}
+                              {isModCompleted && (
+                                <>
+                                  <span>•</span>
+                                  <span className="text-emerald-400 font-bold">Done ✓</span>
                                 </>
                               )}
                             </div>

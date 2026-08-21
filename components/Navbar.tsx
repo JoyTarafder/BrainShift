@@ -23,9 +23,10 @@ export default function Navbar() {
             <Image
               src="/images/logo.png"
               alt="TutorNova Logo"
-              width={160}
-              height={48}
-              className="h-10 w-auto object-contain"
+              width={180}
+              height={54}
+              style={{ height: '42px', width: 'auto' }}
+              className="object-contain"
               priority
             />
           </div>

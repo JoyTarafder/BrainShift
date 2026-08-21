@@ -13,8 +13,25 @@ export default function CourseCatalogPage() {
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
 
-  const subjects = ['All', 'Computer Science', 'Web Development', 'Programming'];
-  const levels = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+  const subjects = [
+    'All',
+    'Class 5–8 (All Subjects)',
+    'Class 9–10 (Science Group)',
+    'HSC / Inter ICT',
+    'Computer Science & CSE',
+    'Web Development',
+    'Programming (C/C++/Java)',
+  ];
+  const levels = [
+    'All',
+    'Class 5 – 8',
+    'Class 9 – 10 (SSC)',
+    'HSC / Inter (11–12)',
+    'University / CSE',
+    'Beginner',
+    'Intermediate',
+    'Advanced',
+  ];
 
   const fetchCourses = async () => {
     setLoading(true);

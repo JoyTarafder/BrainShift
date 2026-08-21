@@ -51,19 +51,30 @@ export async function GET(
     const courseIdObj = courseObj?._id || batchDoc.courseId;
     const courseIdStr = courseIdObj ? courseIdObj.toString() : '';
 
-    // Fetch Enrolled Students for this Batch's Course
+    // Fetch Enrolled Students for this Batch (or fallback by courseId if batchId not set)
+    const batchIdStrVal = batchDoc._id ? batchDoc._id.toString() : id;
     const enrollments = await Enrollment.find({
-      $or: [{ courseId: courseIdObj }, { courseId: courseIdStr }],
-    })
+      $or: [
+        { batchId: id },
+        { batchId: batchIdStrVal },
+        { courseId: courseIdObj, batchId: { $exists: false } },
+        { courseId: courseIdStr, batchId: { $exists: false } },
+      ],
+    } as any)
       .populate('studentId', 'name email phone createdAt')
       .sort({ createdAt: -1 })
       .lean();
 
     // Fetch corresponding Orders
     const orders = await Order.find({
-      $or: [{ courseId: courseIdObj }, { courseId: courseIdStr }],
+      $or: [
+        { batchId: id },
+        { batchId: batchIdStrVal },
+        { courseId: courseIdObj },
+        { courseId: courseIdStr },
+      ],
       status: 'paid',
-    }).lean();
+    } as any).lean();
 
     const enrolledStudents = enrollments.map((enr: any) => {
       const studentObj = enr.studentId || {};
