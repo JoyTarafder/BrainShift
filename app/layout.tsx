@@ -48,7 +48,9 @@ export const metadata: Metadata = {
     images: [`${baseUrl}/images/brainshift-logo.png`],
   },
   icons: {
-    icon: '/images/brainshift-logo.png',
+    icon: '/images/brain-icon.png',
+    shortcut: '/images/brain-icon.png',
+    apple: '/images/brain-icon.png',
   },
 };
 
@@ -59,6 +61,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/images/brain-icon.png" type="image/png" />
+      </head>
       <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
         <Providers>
           <Navbar />
