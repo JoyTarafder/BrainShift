@@ -3,9 +3,14 @@
 > **Expert 1-on-1 and Group Tuition & Mentorship by Joy Tarafder (CSE @ IUB)**  
 > Specializing in Class 5–8 (All Subjects), Class 9–10 (Science Only), Inter ICT, University Computer Science & AI-Based Internship Programs.
 
+<<<<<<< HEAD
 <p align="center">
   <img src="./public/images/brainshift-logo.png" alt="BrainShift Logo" width="360" />
 </p>
+=======
+<img width="1806" height="847" alt="image" src="https://github.com/user-attachments/assets/08e0c85a-da30-4a22-8062-91f2424968c9" />
+
+>>>>>>> 11fba5a446cfb4d5597245684bbc6bf7e69e8c4b
 
 ---
 
