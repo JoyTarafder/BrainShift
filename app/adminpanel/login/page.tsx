@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
           </span>
           <h1 className="text-3xl font-extrabold text-white">Admin Panel Login</h1>
           <p className="text-xs text-slate-400">
-            Authorized management login for Joy Tarafder & TutorNova Administrators.
+            Authorized management login for Joy Tarafder & BrainShift Administrators.
           </p>
         </div>
 
@@ -94,6 +94,14 @@ export default function AdminLoginPage() {
                 placeholder="••••••••"
                 className="w-full pl-9 pr-3 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-amber-500"
               />
+            </div>
+            <div className="flex justify-end mt-1.5">
+              <Link
+                href="/forgot-password"
+                className="text-[11px] font-semibold text-amber-400 hover:text-amber-300 hover:underline transition-colors"
+              >
+                Forgot password?
+              </Link>
             </div>
           </div>
 

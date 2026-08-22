@@ -27,13 +27,14 @@ export default function Navbar() {
         <Link href="/" onClick={closeMobileMenu} className="flex items-center gap-3 group">
           <div className="bg-white/95 p-1.5 rounded-lg shadow-sm group-hover:scale-105 transition-transform duration-200">
             <Image
-              src="/images/logo.png"
-              alt="TutorNova Logo"
+              src="/images/brainshift-logo.png"
+              alt="BrainShift Logo"
               width={180}
               height={54}
               style={{ height: '38px', width: 'auto' }}
               className="object-contain"
               priority
+              unoptimized
             />
           </div>
         </Link>

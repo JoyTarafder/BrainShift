@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['admin', 'student'], default: 'student' },
+    status: { type: String, enum: ['active', 'blocked'], default: 'active' },
   },
   { timestamps: true }
 );
@@ -47,6 +48,9 @@ export const authOptions: AuthOptions = {
           if (res.ok) {
             const data = await res.json();
             if (data.success && data.user) {
+              if (data.user.status === 'blocked') {
+                throw new Error('Your account is blocked. Please contact support.');
+              }
               return {
                 id: data.user.id,
                 name: data.user.name,
@@ -56,7 +60,10 @@ export const authOptions: AuthOptions = {
               };
             }
           }
-        } catch (expressErr) {
+        } catch (expressErr: any) {
+          if (expressErr.message?.includes('blocked')) {
+            throw expressErr;
+          }
           console.warn('Express Auth backend unreachable, attempting direct database auth:', expressErr);
         }
 
@@ -71,6 +78,9 @@ export const authOptions: AuthOptions = {
         }
 
         if (user && (await bcrypt.compare(credentials.password, user.password))) {
+          if (user.status === 'blocked') {
+            throw new Error('Your account has been blocked. Please contact administrator.');
+          }
           return {
             id: user._id.toString(),
             name: user.name,

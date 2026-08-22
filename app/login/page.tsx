@@ -82,6 +82,14 @@ function StudentLoginForm() {
             className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-[#0b2545]"
           />
         </div>
+        <div className="flex justify-end mt-1.5">
+          <Link
+            href="/forgot-password"
+            className="text-[11px] font-semibold text-amber-600 hover:text-amber-700 hover:underline transition-colors"
+          >
+            Forgot password?
+          </Link>
+        </div>
       </div>
 
       <button
@@ -106,7 +114,7 @@ export default function StudentLoginPage() {
           </span>
           <h1 className="text-3xl font-extrabold text-[#0b2545]">Student Login</h1>
           <p className="text-xs text-slate-500">
-            Access your TutorNova courses, video lectures, PDF notes, and exam scores.
+            Access your BrainShift courses, video lectures, PDF notes, and exam scores.
           </p>
         </div>
 

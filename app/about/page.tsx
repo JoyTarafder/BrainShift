@@ -12,6 +12,7 @@ import {
 
 export default function AboutPage() {
   const subjectsAndSkills = [
+    "AI-Based Internship & Mentorship Program",
     "Class 5–8 All Subjects (সকল বিষয়)",
     "Class 9–10 Science (Physics, Chemistry, Higher Math, Biology)",
     "HSC / Inter ICT (Chapter 1–6)",
@@ -41,7 +42,7 @@ export default function AboutPage() {
               Academic Tutor, Software Engineer, Computer Science student at Independent
               University, Bangladesh (IUB), and founder of{" "}
               <strong className="text-amber-400 font-semibold">
-                TutorNova
+                BrainShift
               </strong>
               .
             </p>
@@ -59,44 +60,65 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Class 5-8 */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                <BookOpen className="w-5 h-5" />
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Class 5 – 8 Tuition (All Subjects)
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  Complete guidance in <strong>General Math, Science, English, Bangla, BGS, and ICT</strong> for class 5, 6, 7, and 8 students. Focus on conceptual foundation and exam readiness.
+                </p>
               </div>
-              <h3 className="text-lg font-bold text-slate-900">
-                Class 5 – 8 Tuition (All Subjects)
-              </h3>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                Complete guidance in <strong>General Math, Science, English, Bangla, BGS, and ICT</strong> for class 5, 6, 7, and 8 students. Focus on conceptual foundation and exam readiness.
-              </p>
             </div>
 
             {/* Class 9-10 */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                <Atom className="w-5 h-5" />
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                  <Atom className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Class 9 – 10 Tuition (Science Only)
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  Specialized SSC preparation for <strong>Physics, Chemistry, Higher Mathematics, Biology, General Mathematics, and ICT</strong> with Creative Question (CQ) & MCQ practice.
+                </p>
               </div>
-              <h3 className="text-lg font-bold text-slate-900">
-                Class 9 – 10 Tuition (Science Group Only)
-              </h3>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                Specialized SSC preparation for <strong>Physics, Chemistry, Higher Mathematics, Biology, General Mathematics, General Science, and ICT</strong>. Thorough Creative Question (CQ) & MCQ practice.
-              </p>
             </div>
 
             {/* HSC Inter ICT */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3">
-              <div className="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
-                <Laptop className="w-5 h-5" />
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+                  <Laptop className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  HSC / Inter ICT (Class 11 – 12)
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  In-depth coverage of <strong>HSC ICT Chapter 1 to 6</strong>: C Programming, HTML Web Design, Database Systems, Logic Gates, and Board Exam question paper solving.
+                </p>
               </div>
-              <h3 className="text-lg font-bold text-slate-900">
-                HSC / Inter ICT (Class 11 – 12)
-              </h3>
-              <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                In-depth coverage of <strong>HSC ICT Chapter 1 to 6</strong>: C Programming, HTML Web Design, Database Systems, Logic Gates, and Board Exam question paper solving.
-              </p>
+            </div>
+
+            {/* AI-Based Internship & Mentorship */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                  <Code className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">
+                  AI-Based Internship & Mentorship
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  Specialized program for University CSE & coding students: <strong>AI-based Internship & Mentorship Program, Full-stack Web Development, 1-on-1 coding guidance & live project building</strong>.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -250,6 +272,12 @@ export default function AboutPage() {
                   <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0" />
                   <span>
                     <strong>HSC / Inter Tuition:</strong> ICT (Chapter 1 to 6)
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-amber-500 shrink-0" />
+                  <span>
+                    <strong>Mentorship Program:</strong> AI-Based Internship & Mentorship
                   </span>
                 </li>
                 <li className="flex items-center gap-3">

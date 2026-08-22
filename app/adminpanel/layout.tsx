@@ -79,7 +79,7 @@ export default function AdminPanelLayout({ children }: { children: React.ReactNo
             <ShieldCheck className="w-5 h-5" />
             <span>Admin Control Panel</span>
           </div>
-          <p className="text-[11px] text-slate-400">TutorNova Management System</p>
+          <p className="text-[11px] text-slate-400">BrainShift Management System</p>
         </div>
 
         {/* Navigation Section */}

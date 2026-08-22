@@ -11,18 +11,19 @@ export default function Footer() {
           <div className="md:col-span-2 space-y-4">
             <div className="bg-white/95 p-2 rounded-lg inline-block">
               <Image
-                src="/images/logo.png"
-                alt="TutorNova Logo"
+                src="/images/brainshift-logo.png"
+                alt="BrainShift Logo"
                 width={180}
                 height={54}
                 style={{ height: "42px", width: "auto" }}
                 className="object-contain"
+                unoptimized
               />
             </div>
             <p className="text-slate-400 text-sm max-w-sm">
-              Empowering computer science & software engineering students
-              through structured 1-on-1 tuition, coding bootcamps, and
-              specialized courses by Joy Tarafder.
+              Empowering academic & computer science students
+              through structured 1-on-1 tuition, AI-based mentorship, and
+              specialized coaching by Joy Tarafder.
             </p>
           </div>
 
@@ -100,7 +101,7 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-slate-800 text-center md:flex md:justify-between md:text-left text-xs text-slate-500">
           <p>
-            © {new Date().getFullYear()} TutorNova — Joy Tarafder. All rights
+            © {new Date().getFullYear()} BrainShift — Joy Tarafder. All rights
             reserved.
           </p>
           <p className="mt-2 md:mt-0 font-medium text-slate-400">

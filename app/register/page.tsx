@@ -75,7 +75,7 @@ export default function StudentRegisterPage() {
       <div className="bg-white rounded-3xl p-8 sm:p-10 max-w-md w-full border border-slate-200 shadow-xl space-y-6">
         <div className="text-center space-y-2">
           <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
-            Join TutorNova
+            Join BrainShift
           </span>
           <h1 className="text-3xl font-extrabold text-[#0b2545]">Student Registration</h1>
           <p className="text-xs text-slate-500">

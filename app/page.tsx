@@ -51,7 +51,7 @@ export default function Home() {
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
                 Class 5–10, Inter ICT & CS Tuition with{" "}
-                <span className="text-amber-400">TutorNova</span>
+                <span className="text-amber-400">BrainShift</span>
               </h1>
 
               <p className="text-base sm:text-lg text-slate-300 max-w-2xl">
@@ -100,12 +100,13 @@ export default function Home() {
               <div className="w-full max-w-md bg-slate-900/90 border border-slate-700/70 rounded-2xl p-6 shadow-2xl backdrop-blur-xl space-y-6">
                 <div className="bg-white rounded-xl p-4 flex justify-center shadow-inner">
                   <Image
-                    src="/images/logo.png"
-                    alt="TutorNova Brand Logo"
+                    src="/images/brainshift-logo.png"
+                    alt="BrainShift Brand Logo"
                     width={260}
                     height={80}
                     style={{ height: "72px", width: "auto" }}
                     className="object-contain"
+                    unoptimized
                   />
                 </div>
 
@@ -124,7 +125,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-amber-400 shrink-0" />
-                    <span><strong>CSE & Coding:</strong> Software Engineering & Industry Internship Guidance</span>
+                    <span><strong>CSE & AI Mentorship:</strong> AI-based Internship & Mentorship Program, Full-stack Web Dev</span>
                   </div>
                 </div>
               </div>
@@ -233,30 +234,34 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Card 4: CSE & Programming */}
+          {/* Card 4: AI Based Internship & Mentorship */}
           <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
                 <Code className="w-6 h-6" />
               </div>
               <span className="inline-block px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-xs">
-                University CSE
+                University CSE & AI
               </span>
               <h3 className="text-xl font-bold text-slate-900">
-                CSE & Software Dev
+                AI-Based Internship & Mentorship
               </h3>
               <p className="text-slate-600 text-sm leading-relaxed">
-                Data Structures, C/C++, Java, Full-stack Web Development with Next.js & React.
+                AI-based Internship & Mentorship Program, Full-stack Web Development.
               </p>
               <ul className="space-y-1.5 text-xs text-slate-500 pt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>1-on-1 coding mentorship & project building</span>
+                  <span>AI-based internship & mentorship program</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>Industry internship guidance</span>
+                  <span>1-on-1 coding mentorship & project building</span>
                 </li>
+                {/* <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>Industry internship & career preparation</span>
+                </li> */}
               </ul>
             </div>
           </div>
