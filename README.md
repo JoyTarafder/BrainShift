@@ -3,9 +3,8 @@
 > **Expert 1-on-1 and group tuition by Joy Tarafder (CSE @ IUB)**  
 > Specializing in Class 5–8 (All Subjects), Class 9–10 (Science Only), Inter ICT, and University Computer Science & Coding.
 
-<p align="center">
-  <img src="./public/images/preview.png" alt="TutorNova Homepage Preview" width="100%" />
-</p>
+<img width="1806" height="847" alt="image" src="https://github.com/user-attachments/assets/08e0c85a-da30-4a22-8062-91f2424968c9" />
+
 
 ---
 
