@@ -3,24 +3,20 @@
 > **Expert 1-on-1 and Group Tuition & Mentorship by Joy Tarafder (CSE @ IUB)**  
 > Specializing in Class 5–8 (All Subjects), Class 9–10 (Science Only), Inter ICT, University Computer Science & AI-Based Internship Programs.
 
-<<<<<<< HEAD
 <p align="center">
   <img src="./public/images/brainshift-logo.png" alt="BrainShift Logo" width="360" />
 </p>
-=======
+
 <img width="1806" height="847" alt="image" src="https://github.com/user-attachments/assets/08e0c85a-da30-4a22-8062-91f2424968c9" />
 
->>>>>>> 11fba5a446cfb4d5597245684bbc6bf7e69e8c4b
-
----
 
 ## 🎓 Tuition & Program Coverage
 
-| Level / Category | Subjects & Focus Areas |
-|---|---|
-| **Class 5 – 8** | All Subjects (সকল বিষয়) — General Math, Science, English, Bangla, BGS, ICT |
-| **Class 9 – 10 (SSC)** | Science Group Only (বিজ্ঞান বিভাগ) — Physics, Chemistry, Higher Math, Biology, General Math, ICT |
-| **HSC / Inter (11–12)** | ICT (Chapter 1–6) — C Programming, HTML, Database Systems, Logic Gates, CQ & MCQ Solving |
+| Level / Category        | Subjects & Focus Areas                                                                                                                        |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Class 5 – 8**         | All Subjects (সকল বিষয়) — General Math, Science, English, Bangla, BGS, ICT                                                                    |
+| **Class 9 – 10 (SSC)**  | Science Group Only (বিজ্ঞান বিভাগ) — Physics, Chemistry, Higher Math, Biology, General Math, ICT                                              |
+| **HSC / Inter (11–12)** | ICT (Chapter 1–6) — C Programming, HTML, Database Systems, Logic Gates, CQ & MCQ Solving                                                      |
 | **AI Mentorship & CSE** | **AI-Based Internship & Mentorship Program**, Full-stack Web Development (Next.js, React, Node.js), C/C++, Java, Data Structures & Algorithms |
 
 ---
@@ -41,15 +37,15 @@
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 15 / 16 (App Router), React 19, Tailwind CSS v4, Lucide Icons, TypeScript |
-| **Backend & API** | Next.js API Routes + Node.js / Express.js REST API |
-| **Database & ODM** | MongoDB Atlas with Mongoose |
-| **Authentication** | NextAuth.js (JWT Strategy) + bcryptjs |
-| **Video Player** | Custom Plyr.js with Dynamic Anti-Piracy Watermark & Shield |
-| **Payment Gateway** | SSLCommerz, bKash, Nagad, Rocket |
-| **Deployment** | Vercel (Frontend) + Render / Railway (Backend) |
+| Layer               | Technology                                                                        |
+| ------------------- | --------------------------------------------------------------------------------- |
+| **Frontend**        | Next.js 15 / 16 (App Router), React 19, Tailwind CSS v4, Lucide Icons, TypeScript |
+| **Backend & API**   | Next.js API Routes + Node.js / Express.js REST API                                |
+| **Database & ODM**  | MongoDB Atlas with Mongoose                                                       |
+| **Authentication**  | NextAuth.js (JWT Strategy) + bcryptjs                                             |
+| **Video Player**    | Custom Plyr.js with Dynamic Anti-Piracy Watermark & Shield                        |
+| **Payment Gateway** | SSLCommerz, bKash, Nagad, Rocket                                                  |
+| **Deployment**      | Vercel (Frontend) + Render / Railway (Backend)                                    |
 
 ---
 
@@ -132,7 +128,7 @@ tuitionBd/
 
 **Joy Tarafder**  
 Academic Tutor & Software Engineer  
-*B.Sc. in Computer Science & Engineering — Independent University, Bangladesh (IUB)*
+_B.Sc. in Computer Science & Engineering — Independent University, Bangladesh (IUB)_
 
 - 🎓 **HSC (Science):** Ghatail Cantonment College — GPA 5.00
 - 🎓 **SSC (Science):** Kalihati R.S. Govt. Pilot High School — GPA 5.00
