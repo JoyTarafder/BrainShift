@@ -1,12 +1,9 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { connectToDatabase } from '@/lib/db';
-import mongoose from 'mongoose';
+import User from '@/models/User';
 import { Users } from 'lucide-react';
 import StudentTableClient from './StudentTableClient';
-
-const UserSchema = new mongoose.Schema({ name: String, email: String, phone: String, role: String, status: String, createdAt: Date });
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 export default async function AdminStudentsPage() {
   await getServerSession(authOptions);

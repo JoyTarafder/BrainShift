@@ -1,14 +1,11 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { connectToDatabase } from '@/lib/db';
-import mongoose from 'mongoose';
+import User from '@/models/User';
 import Course from '@/models/Course';
 import Mark from '@/models/Mark';
 import { Award, PlusCircle, CheckCircle2, User as UserIcon, BookOpen } from 'lucide-react';
 import MarkFormModal from './MarkFormModal';
-
-const UserSchema = new mongoose.Schema({ name: String, email: String, role: String });
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 export default async function AdminMarksPage() {
   await getServerSession(authOptions);

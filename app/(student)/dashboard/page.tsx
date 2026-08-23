@@ -239,6 +239,7 @@ export default async function StudentDashboardPage() {
                       src={course.thumbnailUrl || 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80'}
                       alt={course.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-3 left-3 bg-[#0b2545]/90 text-white text-xs font-bold px-2.5 py-1 rounded shadow-xs">

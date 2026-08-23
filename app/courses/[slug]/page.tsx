@@ -12,7 +12,6 @@ import {
   FileText,
   Layers,
   Mail,
-  MessageSquare,
   PlayCircle,
   ShieldCheck,
 } from "lucide-react";
@@ -129,17 +128,17 @@ export default async function CourseDetailPage({
             </span>
             {hasDiscount && (
               <span className="bg-rose-500 text-white font-extrabold text-xs px-3 py-1 rounded-md shadow-md animate-pulse">
-                🔥 {discountPercent}% OFF
+                {discountPercent}% OFF
               </span>
             )}
             {course.enrollmentOpen === false && paymentStatus === "none" && (
               <span className="bg-rose-600 text-white font-extrabold text-xs px-3 py-1 rounded-md uppercase tracking-wider">
-                🔴 Enrollment Closed
+                Enrollment Closed
               </span>
             )}
             {paymentStatus === "pending" && (
               <span className="bg-amber-500 text-slate-950 font-extrabold text-xs px-3 py-1 rounded-md uppercase tracking-wider shadow-md animate-pulse">
-                ⏳ Payment Pending Verification
+                Payment Pending Verification
               </span>
             )}
             {paymentStatus === "paid" && (
@@ -188,6 +187,7 @@ export default async function CourseDetailPage({
                 src={course.thumbnailUrl}
                 alt={course.title}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
                 className="object-cover"
                 priority
               />
@@ -221,12 +221,12 @@ export default async function CourseDetailPage({
                 }`}
               >
                 {paymentStatus === "paid"
-                  ? "✓ Enrolled"
+                  ? "Enrolled"
                   : paymentStatus === "pending"
-                    ? "⏳ Pending Review"
+                    ? "Pending Review"
                     : course.enrollmentOpen !== false
-                      ? "🟢 Seats Available"
-                      : "🔴 Seats Full"}
+                      ? "Seats Available"
+                      : "Seats Full"}
               </span>
             </div>
 

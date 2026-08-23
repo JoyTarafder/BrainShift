@@ -10,7 +10,6 @@ import {
   Clock,
   Copy,
   CreditCard,
-  Lock,
   ShieldCheck,
   Smartphone,
   X,
@@ -221,9 +220,9 @@ export default function EnrollButton({
     return (
       <button
         disabled
-        className="w-full py-3.5 px-4 rounded-xl font-bold bg-slate-200 text-slate-500 cursor-not-allowed text-xs border border-slate-300 flex items-center justify-center gap-2"
+        className="w-full py-3.5 px-4 rounded-xl font-bold bg-slate-200 text-red-500 cursor-not-allowed text-xs border border-slate-300 flex items-center justify-center gap-2"
       >
-        <span>🔴 Enrollment Closed (Seats Full)</span>
+        <span>Enrollment Closed</span>
       </button>
     );
   }

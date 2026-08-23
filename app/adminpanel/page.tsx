@@ -14,25 +14,10 @@ import {
   Server,
 } from 'lucide-react';
 import { connectToDatabase } from '@/lib/db';
-import mongoose from 'mongoose';
-
-const UserSchema = new mongoose.Schema({ name: String, email: String, role: String, createdAt: Date });
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
-
-const CourseSchema = new mongoose.Schema({ title: String, slug: String, price: Number, status: String });
-const Course = mongoose.models.Course || mongoose.model('Course', CourseSchema);
-
-const OrderSchema = new mongoose.Schema({
-  studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
-  amount: Number,
-  status: String,
-  createdAt: Date,
-});
-const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
-
-const MarkSchema = new mongoose.Schema({ studentId: mongoose.Schema.Types.ObjectId, examTitle: String });
-const Mark = mongoose.models.Mark || mongoose.model('Mark', MarkSchema);
+import User from '@/models/User';
+import Course from '@/models/Course';
+import Order from '@/models/Order';
+import Mark from '@/models/Mark';
 
 export default async function AdminPanelOverviewPage() {
   const session = await getServerSession(authOptions);

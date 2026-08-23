@@ -2,26 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { PlusCircle, Edit3, Trash2, Eye, ShieldCheck, ArrowLeft, BookOpen, ToggleLeft, ToggleRight } from 'lucide-react';
+import { PlusCircle, Edit3, Eye, BookOpen } from 'lucide-react';
 import DeleteCourseButton from '@/components/DeleteCourseButton';
 import QuickEnrollToggle from '@/components/QuickEnrollToggle';
 import { connectToDatabase } from '@/lib/db';
-import mongoose from 'mongoose';
-
-const CourseSchema = new mongoose.Schema({
-  title: String,
-  slug: String,
-  price: Number,
-  oldPrice: Number,
-  subject: String,
-  level: String,
-  duration: String,
-  thumbnailUrl: String,
-  status: String,
-  enrollmentOpen: { type: Boolean, default: true },
-  createdAt: Date,
-});
-const Course = mongoose.models.Course || mongoose.model('Course', CourseSchema);
+import Course from '@/models/Course';
 
 export default async function AdminCoursesPage() {
   const session = await getServerSession(authOptions);
@@ -84,6 +69,7 @@ export default async function AdminCoursesPage() {
                             src={course.thumbnailUrl || 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80'}
                             alt={course.title}
                             fill
+                            sizes="48px"
                             className="object-cover"
                           />
                         </div>
