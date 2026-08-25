@@ -6,21 +6,21 @@ export default function Footer() {
   return (
     <footer className="bg-[#0b2545] text-slate-300 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8 items-start">
           {/* Col 1: Brand */}
-          <div className="md:col-span-2 space-y-4">
-            <div className="bg-white/95 p-2 rounded-lg inline-block">
+          <div className="md:col-span-6 space-y-4">
+            <div className="bg-white/95 px-3 py-1.5 rounded-lg inline-flex items-center">
               <Image
                 src="/images/brainshift-logo.png"
                 alt="BrainShift Logo"
                 width={180}
                 height={54}
-                style={{ height: "42px", width: "auto" }}
+                style={{ height: "36px", width: "auto" }}
                 className="object-contain"
                 unoptimized
               />
             </div>
-            <p className="text-slate-400 text-sm max-w-sm">
+            <p className="text-slate-400 text-sm max-w-md">
               Empowering academic & computer science students
               through structured 1-on-1 tuition, AI-based mentorship, and
               specialized coaching by Joy Tarafder.
@@ -28,10 +28,10 @@ export default function Footer() {
           </div>
 
           {/* Col 2: Quick Links */}
-          <div>
-            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+          <div className="md:col-span-3">
+            <h2 className="text-white font-semibold mb-4 text-sm tracking-wider">
               Quick Links
-            </h4>
+            </h2>
             <ul className="space-y-2.5 text-sm text-slate-400">
               <li>
                 <Link
@@ -61,10 +61,10 @@ export default function Footer() {
           </div>
 
           {/* Col 3: Contact */}
-          <div>
-            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+          <div className="md:col-span-3">
+            <h2 className="text-white font-semibold mb-4 text-sm tracking-wider">
               Contact Joy
-            </h4>
+            </h2>
             <ul className="space-y-3 text-sm text-slate-400">
               <li>CSE @ IUB</li>
               <li>Dhaka, Bangladesh</li>
@@ -106,7 +106,7 @@ export default function Footer() {
           </p>
           <p className="mt-2 md:mt-0 font-medium text-slate-400">
             Developed by{" "}
-            <span className="text-yellow-400 font-extrabold hover:text-yellow-300 transition-colors">
+            <span className="text-amber-400 font-bold hover:text-amber-300 transition-colors">
               Joy Tarafder
             </span>
           </p>

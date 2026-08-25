@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { PlusCircle, Edit3, Eye, BookOpen } from 'lucide-react';
+import { PlusCircle, Edit3, Eye, BookOpen, CheckCircle2 } from 'lucide-react';
 import DeleteCourseButton from '@/components/DeleteCourseButton';
 import QuickEnrollToggle from '@/components/QuickEnrollToggle';
 import { connectToDatabase } from '@/lib/db';
@@ -96,13 +96,14 @@ export default async function AdminCoursesPage() {
 
                     <td className="py-4 px-6">
                       <span
-                        className={`inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                        className={`inline-flex items-center gap-1.5 text-xs font-bold capitalize px-2.5 py-1 rounded-lg border ${
                           course.status === 'published'
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                            : 'bg-slate-200 text-slate-700 border-slate-300'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                            : 'bg-slate-100 text-slate-700 border-slate-300'
                         }`}
                       >
-                        {course.status}
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                        <span>{course.status}</span>
                       </span>
                     </td>
                     
@@ -111,7 +112,7 @@ export default async function AdminCoursesPage() {
                         <Link
                           href={`/courses/${course.slug}`}
                           target="_blank"
-                          className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
                           title="View Public Page"
                         >
                           <Eye className="w-4 h-4" />

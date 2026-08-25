@@ -114,16 +114,16 @@ export default function BatchFormModal({ courses, initialBatch, triggerButton }:
             e.stopPropagation();
             setIsOpen(true);
           }}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors shadow-2xs cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 transition-colors cursor-pointer"
           title="Edit Batch Details"
         >
-          <Edit2 className="w-3.5 h-3.5" />
+          <Edit2 className="w-3.5 h-3.5 text-slate-600" />
           <span>Edit Batch</span>
         </button>
       ) : (
         <button
           onClick={() => setIsOpen(true)}
-          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-lg transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Create New Batch</span>
@@ -131,22 +131,24 @@ export default function BatchFormModal({ courses, initialBatch, triggerButton }:
       )}
 
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative space-y-6 my-auto max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-lg overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative space-y-6 my-auto max-h-[92vh] overflow-y-auto">
             <button
+              type="button"
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"
+              className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center text-slate-500 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-full transition-colors cursor-pointer"
+              title="Close dialog"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <div className="space-y-1 text-center pt-2">
-              <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
+            <div className="space-y-1.5 text-center pt-1">
+              <span className="inline-block text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
                 Tuition Schedule
               </span>
-              <h3 className="text-2xl font-black text-[#0b2545]">
+              <h2 className="text-xl font-bold text-[#0b2545]">
                 {isEditing ? `Edit ${initialBatch?.name}` : 'Create Tuition Batch'}
-              </h3>
+              </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-slate-900">
@@ -203,6 +205,21 @@ export default function BatchFormModal({ courses, initialBatch, triggerButton }:
                 />
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Batch Status *
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as any)}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
+                >
+                  <option value="active" className="text-slate-900 font-semibold">Active</option>
+                  <option value="upcoming" className="text-slate-900 font-semibold">Upcoming</option>
+                  <option value="completed" className="text-slate-900 font-semibold">Completed</option>
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-800 mb-1">
@@ -219,30 +236,15 @@ export default function BatchFormModal({ courses, initialBatch, triggerButton }:
 
                 <div>
                   <label className="block text-xs font-bold text-slate-800 mb-1">
-                    Batch Status
+                    Start Date
                   </label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value as any)}
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
-                  >
-                    <option value="active" className="text-slate-900 font-semibold">Active</option>
-                    <option value="upcoming" className="text-slate-900 font-semibold">Upcoming</option>
-                    <option value="completed" className="text-slate-900 font-semibold">Completed</option>
-                  </select>
+                  />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
-                  Start Date
-                </label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
-                />
               </div>
 
               <div>

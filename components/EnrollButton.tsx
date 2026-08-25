@@ -218,12 +218,10 @@ export default function EnrollButton({
   // 3. Enrollment Closed
   if (!enrollmentOpen) {
     return (
-      <button
-        disabled
-        className="w-full py-3.5 px-4 rounded-xl font-bold bg-slate-200 text-red-500 cursor-not-allowed text-xs border border-slate-300 flex items-center justify-center gap-2"
-      >
-        <span>Enrollment Closed</span>
-      </button>
+      <div className="w-full py-2.5 px-3 rounded-xl font-bold bg-rose-50 text-rose-700 text-xs border border-rose-200 flex items-center justify-center gap-2">
+        <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+        <span>Enrollment is closed for this batch</span>
+      </div>
     );
   }
 

@@ -75,9 +75,9 @@ export default function Testimonials() {
             </div>
 
             <div className="pt-4 border-t border-slate-100 space-y-1">
-              <h4 className="font-bold text-slate-900 text-base">{item.name}</h4>
+              <h3 className="font-bold text-slate-900 text-base">{item.name}</h3>
               <p className="text-xs font-medium text-amber-600">{item.role} • {item.institution}</p>
-              <p className="text-[11px] text-slate-400 font-mono">Course: {item.courseTaken}</p>
+              <p className="text-xs text-slate-500">Course: {item.courseTaken}</p>
             </div>
           </div>
         ))}

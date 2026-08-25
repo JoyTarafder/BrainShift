@@ -146,19 +146,19 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 shadow-xl p-8 space-y-8 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-6">
+      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
         <div>
-          <h2 className="text-2xl font-bold text-[#0b2545]">
-            {isEdit ? 'Edit Course' : 'Create New Course'}
+          <h2 className="text-sm font-bold text-[#0b2545] uppercase tracking-wider">
+            {isEdit ? 'Course Specifications & Modules' : 'Course Information & Metadata'}
           </h2>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-xs mt-0.5">
             {isEdit ? 'Update course syllabus, modules, pricing discounts, enrollment status, and batches.' : 'Fill in the course details to publish to TutorNova.'}
           </p>
         </div>
         <button
           type="button"
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-[#0b2545]"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#0b2545] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Cancel</span>
@@ -175,7 +175,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-900">
         {/* Title */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Course Title *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Course Title *</label>
           <input
             type="text"
             required
@@ -188,7 +188,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Slug */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">URL Slug *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">URL Slug *</label>
           <input
             type="text"
             required
@@ -201,7 +201,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Subject */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Subject Category *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Subject Category *</label>
           <input
             type="text"
             required
@@ -212,28 +212,24 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
           />
         </div>
 
-        {/* Enrollment Off / On Switch */}
+        {/* Enrollment Status Select */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Enrollment Status *</label>
-          <button
-            type="button"
-            onClick={() => setEnrollmentOpen(!enrollmentOpen)}
-            className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-between border transition-all ${
-              enrollmentOpen
-                ? 'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100'
-                : 'bg-rose-50 border-rose-300 text-rose-800 hover:bg-rose-100'
-            }`}
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
+            Enrollment Status *
+          </label>
+          <select
+            value={enrollmentOpen ? 'open' : 'closed'}
+            onChange={(e) => setEnrollmentOpen(e.target.value === 'open')}
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
           >
-            <span>{enrollmentOpen ? '🟢 Enrollment OPEN (Accepting Payments)' : '🔴 Enrollment CLOSED (Seats Full)'}</span>
-            <span className="text-[10px] uppercase font-extrabold px-2.5 py-1 rounded-md bg-white shadow-sm border border-slate-200">
-              {enrollmentOpen ? 'ON' : 'OFF'}
-            </span>
-          </button>
+            <option value="open" className="text-slate-900 font-semibold">Open (Accepting Enrollments)</option>
+            <option value="closed" className="text-slate-900 font-semibold">Closed (Seats Full)</option>
+          </select>
         </div>
 
-        {/* Batch Selection Option Box (Populated from Batch Management) */}
+        {/* Batch Selection Option Box */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
             Assigned Batch Schedule Option *
           </label>
           {batches.length > 0 ? (
@@ -266,9 +262,9 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
           )}
         </div>
 
-        {/* Pricing Fields: Old regular price & Discounted new price */}
+        {/* Pricing Fields */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
             Original / Old Price (BDT ৳)
           </label>
           <div className="relative">
@@ -285,11 +281,11 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
             New / Selling Price (BDT ৳) *
           </label>
           <div className="relative">
-            <Tag className="w-4 h-4 absolute left-3 top-3 text-emerald-600" />
+            <Tag className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
             <input
               type="number"
               required
@@ -297,14 +293,14 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="2500 (Discounted Price)"
-              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-emerald-700 focus:ring-2 focus:ring-[#0b2545]"
+              className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
             />
           </div>
         </div>
 
         {/* Level */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Skill Level *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Skill Level *</label>
           <select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
@@ -320,7 +316,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Duration */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Duration *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Duration *</label>
           <input
             type="text"
             required
@@ -333,7 +329,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Status */}
         <div>
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Status *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Publish Status *</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as any)}
@@ -347,7 +343,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Thumbnail URL */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Thumbnail Image URL *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Thumbnail Image URL *</label>
           <div className="relative">
             <ImageIcon className="w-5 h-5 absolute left-3 top-3 text-slate-400" />
             <input
@@ -363,7 +359,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Short Description */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Short Description *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Short Description *</label>
           <input
             type="text"
             required
@@ -376,7 +372,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
 
         {/* Detailed Description */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-bold text-slate-800 mb-1.5">Full Course Overview *</label>
+          <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">Full Course Overview *</label>
           <textarea
             rows={4}
             required
@@ -398,25 +394,36 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
           <button
             type="button"
             onClick={handleAddModule}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-100"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0b2545] bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Add Module</span>
           </button>
         </div>
 
         <div className="space-y-4">
           {modules.map((mod, index) => (
-            <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#0b2545]">Module {index + 1}</span>
+            <div key={index} className="p-4.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 shadow-xs">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-slate-700 bg-white px-2.5 py-0.5 rounded-md border border-slate-200">
+                    Module {index + 1}
+                  </span>
+                  {mod.title && (
+                    <span className="text-xs font-semibold text-slate-600 truncate max-w-xs sm:max-w-md">
+                      — {mod.title}
+                    </span>
+                  )}
+                </div>
                 {modules.length > 1 && (
                   <button
                     type="button"
                     onClick={() => handleRemoveModule(index)}
-                    className="text-xs text-rose-600 hover:underline font-semibold flex items-center gap-1"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
+                    title="Remove Module"
                   >
-                    <Trash2 className="w-3.5 h-3.5" /> Remove Module
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Remove Module</span>
                   </button>
                 )}
               </div>
@@ -429,7 +436,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
                     value={mod.title}
                     onChange={(e) => handleModuleChange(index, 'title', e.target.value)}
                     placeholder="Module Title (e.g. Chapter 3: Logic Gates)"
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
                   />
                 </div>
 
@@ -437,7 +444,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
                   <select
                     value={mod.type}
                     onChange={(e) => handleModuleChange(index, 'type', e.target.value as any)}
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
                   >
                     <option value="video" className="text-slate-900 font-semibold">Video (YouTube)</option>
                     <option value="pdf" className="text-slate-900 font-semibold">PDF / Document</option>
@@ -451,7 +458,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
                     value={mod.durationMinutes || ''}
                     onChange={(e) => handleModuleChange(index, 'durationMinutes', Number(e.target.value))}
                     placeholder="Duration (mins)"
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
                   />
                 </div>
 
@@ -462,7 +469,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
                     value={mod.url}
                     onChange={(e) => handleModuleChange(index, 'url', e.target.value)}
                     placeholder="Resource URL (e.g. https://www.youtube.com/watch?v=...)"
-                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900"
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-[#0b2545]"
                   />
                 </div>
               </div>
@@ -478,9 +485,9 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
           <button
             type="button"
             onClick={handleAddSyllabusTopic}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg hover:bg-amber-100"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0b2545] bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Add Topic</span>
           </button>
         </div>
@@ -502,9 +509,11 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
                 <button
                   type="button"
                   onClick={() => handleRemoveSyllabusTopic(index)}
-                  className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
+                  title="Remove Topic"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove</span>
                 </button>
               )}
             </div>
@@ -517,7 +526,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100"
+          className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
         >
           Cancel
         </button>
@@ -525,7 +534,7 @@ export default function CourseForm({ initialData, isEdit = false, token, batches
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold bg-[#0b2545] hover:bg-amber-500 hover:text-slate-950 text-white shadow-lg shadow-[#0b2545]/20 transition-all"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-md shadow-amber-500/20 transition-all cursor-pointer"
         >
           <Save className="w-4 h-4" />
           <span>{loading ? 'Saving...' : isEdit ? 'Save Changes' : 'Publish Course'}</span>

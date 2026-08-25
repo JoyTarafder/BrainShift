@@ -27,17 +27,19 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
   const batches = JSON.parse(JSON.stringify(batchDocs));
 
   return (
-    <div className="space-y-6">
-      <Link
-        href="/adminpanel/courses"
-        className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#0b2545] transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Back to Course Management</span>
-      </Link>
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="flex items-center justify-between">
+        <Link
+          href="/adminpanel/courses"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-[#0b2545] transition-colors py-1"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Course Management</span>
+        </Link>
+      </div>
 
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
-        <Edit3 className="w-6 h-6 text-amber-500" />
+        <Edit3 className="w-6 h-6 text-amber-500 shrink-0" />
         <div>
           <h1 className="text-2xl font-extrabold text-[#0b2545]">Edit Course: {course.title}</h1>
           <p className="text-xs text-slate-500 mt-0.5">

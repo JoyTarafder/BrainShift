@@ -118,31 +118,31 @@ export default async function CourseDetailPage({
         </Link>
 
         {/* Hero Header Card */}
-        <div className="bg-gradient-to-r from-[#0b2545] via-[#13293d] to-[#1e3a8a] text-white rounded-3xl p-8 lg:p-12 shadow-xl space-y-6">
+        <div className="bg-gradient-to-r from-[#0b2545] via-[#13293d] to-[#1e3a8a] text-white rounded-2xl p-8 lg:p-12 shadow-xl space-y-6">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-1 rounded-md uppercase tracking-wider">
+            <span className="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-1 rounded-lg">
               {course.subject}
             </span>
-            <span className="bg-white/20 text-white font-semibold text-xs px-3 py-1 rounded-md backdrop-blur-md">
+            <span className="bg-white/20 text-white font-semibold text-xs px-3 py-1 rounded-lg backdrop-blur-md">
               Level: {course.level}
             </span>
             {hasDiscount && (
-              <span className="bg-rose-500 text-white font-extrabold text-xs px-3 py-1 rounded-md shadow-md animate-pulse">
+              <span className="bg-rose-500 text-white font-extrabold text-xs px-3 py-1 rounded-lg shadow-md animate-pulse">
                 {discountPercent}% OFF
               </span>
             )}
             {course.enrollmentOpen === false && paymentStatus === "none" && (
-              <span className="bg-rose-600 text-white font-extrabold text-xs px-3 py-1 rounded-md uppercase tracking-wider">
+              <span className="bg-rose-600 text-white font-bold text-xs px-3 py-1 rounded-lg border border-rose-400">
                 Enrollment Closed
               </span>
             )}
             {paymentStatus === "pending" && (
-              <span className="bg-amber-500 text-slate-950 font-extrabold text-xs px-3 py-1 rounded-md uppercase tracking-wider shadow-md animate-pulse">
+              <span className="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-1 rounded-lg shadow-md animate-pulse">
                 Payment Pending Verification
               </span>
             )}
             {paymentStatus === "paid" && (
-              <span className="bg-emerald-500 text-white font-extrabold text-xs px-3 py-1 rounded-md uppercase tracking-wider shadow-md">
+              <span className="bg-emerald-500 text-white font-bold text-xs px-3 py-1 rounded-lg shadow-md">
                 ✓ Enrolled Student
               </span>
             )}
@@ -158,21 +158,16 @@ export default async function CourseDetailPage({
 
           <div className="flex flex-wrap items-center gap-6 pt-4 text-sm text-slate-300 border-t border-slate-700/60">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-400" />
-              <span>Duration: {course.duration}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-indigo-400" />
-              <span>
-                Tuition Batch:{" "}
-                <strong>
-                  {course.batchInfo || "Batch 01 (Sat, Mon, Wed)"}
-                </strong>
-              </span>
+              <CheckCircle className="w-4 h-4 text-amber-400" />
+              <span>Structured Curriculum</span>
             </div>
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Guaranteed 1-on-1 Mentorship</span>
+              <span>1-on-1 Mentorship & Code Reviews</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-indigo-400" />
+              <span>Live Interactive Sessions</span>
             </div>
           </div>
         </div>
@@ -200,17 +195,17 @@ export default async function CourseDetailPage({
                   <Layers className="w-6 h-6" />
                 </div>
                 <div>
-                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-800 bg-indigo-100 px-2.5 py-0.5 rounded border border-indigo-200">
+                  <span className="text-xs font-bold text-indigo-800 bg-indigo-100 px-2.5 py-0.5 rounded-lg border border-indigo-200">
                     Assigned Tuition Schedule
                   </span>
-                  <h3 className="text-lg font-extrabold text-[#0b2545] mt-0.5">
+                  <p className="text-lg font-extrabold text-[#0b2545] mt-0.5">
                     {course.batchInfo || "Batch 01 (Sat, Mon, Wed • 8:00 PM)"}
-                  </h3>
+                  </p>
                 </div>
               </div>
 
               <span
-                className={`text-xs font-extrabold px-3 py-1.5 rounded-xl border ${
+                className={`text-xs font-bold px-3 py-1.5 rounded-lg border shrink-0 ${
                   paymentStatus === "paid"
                     ? "bg-emerald-100 text-emerald-800 border-emerald-300"
                     : paymentStatus === "pending"
@@ -226,7 +221,7 @@ export default async function CourseDetailPage({
                     ? "Pending Review"
                     : course.enrollmentOpen !== false
                       ? "Seats Available"
-                      : "Seats Full"}
+                      : "Enrollment Closed"}
               </span>
             </div>
 
@@ -283,19 +278,17 @@ export default async function CourseDetailPage({
                   {course.modules.map((mod: any, idx: number) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-4 rounded-xl border border-slate-200 bg-slate-50 text-sm"
+                      className="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-sm"
                     >
-                      <div className="flex items-center gap-3">
-                        {mod.type === "video" ? (
-                          <PlayCircle className="w-5 h-5 text-amber-500" />
-                        ) : (
-                          <FileText className="w-5 h-5 text-indigo-500" />
-                        )}
-                        <span className="font-medium text-slate-900">
-                          {mod.title}
-                        </span>
-                      </div>
-                      <span className="text-xs text-slate-500 capitalize bg-slate-200 px-2.5 py-1 rounded font-semibold">
+                      {mod.type === "video" ? (
+                        <PlayCircle className="w-5 h-5 text-amber-500 shrink-0" />
+                      ) : (
+                        <FileText className="w-5 h-5 text-indigo-500 shrink-0" />
+                      )}
+                      <span className="font-medium text-slate-900 flex-grow">
+                        {mod.title}
+                      </span>
+                      <span className="text-xs text-slate-600 capitalize bg-slate-200/80 px-2.5 py-0.5 rounded-md font-medium shrink-0">
                         {mod.type}
                       </span>
                     </div>
@@ -368,41 +361,37 @@ export default async function CourseDetailPage({
               {/* Contact Inquiry Options */}
               <div className="space-y-2.5 pt-3 border-t border-slate-100">
                 <div className="text-xs font-extrabold text-slate-500 uppercase tracking-wider text-center">
-                  Inquire & Contact Support
+                  {course.enrollmentOpen === false && paymentStatus === "none"
+                    ? "Inquire for Next Batch or Private Tuition"
+                    : "Inquire & Contact Support"}
                 </div>
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-between py-2.5 px-3.5 rounded-xl font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-all text-xs shadow-xs group"
+                  className={`w-full inline-flex items-center justify-center gap-2 py-3 px-3.5 rounded-xl font-bold transition-all text-xs shadow-sm ${
+                    course.enrollmentOpen === false && paymentStatus === "none"
+                      ? "bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-md shadow-amber-500/20"
+                      : "bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100"
+                  }`}
                 >
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/images/whatsapp-clean-icon.png"
-                      alt="WhatsApp Logo"
-                      width={24}
-                      height={24}
-                      className="w-6 h-6 object-contain group-hover:scale-110 transition-transform"
-                      unoptimized
-                    />
-                    <span>WhatsApp: 01714890199</span>
-                  </div>
-                  <span className="text-[10px] font-extrabold bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded-md">
-                    Message
-                  </span>
+                  <Image
+                    src="/images/whatsapp-clean-icon.png"
+                    alt="WhatsApp Logo"
+                    width={20}
+                    height={20}
+                    className="w-5 h-5 object-contain inline-block"
+                    unoptimized
+                  />
+                  <span>WhatsApp: 01714890199</span>
                 </a>
 
                 <a
                   href={mailtoUrl}
-                  className="w-full inline-flex items-center justify-between py-2.5 px-3.5 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all text-xs border border-slate-200"
+                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3.5 rounded-xl font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all text-xs border border-slate-200"
                 >
-                  <div className="flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-indigo-600" />
-                    <span>Email: joytarafder3@gmail.com</span>
-                  </div>
-                  <span className="text-[10px] font-extrabold bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md">
-                    Send
-                  </span>
+                  <Mail className="w-4 h-4 text-indigo-600" />
+                  <span>Email: joytarafder3@gmail.com</span>
                 </a>
               </div>
             </div>

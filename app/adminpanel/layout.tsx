@@ -79,12 +79,12 @@ export default function AdminPanelLayout({ children }: { children: React.ReactNo
             <ShieldCheck className="w-5 h-5" />
             <span>Admin Control Panel</span>
           </div>
-          <p className="text-[11px] text-slate-400">BrainShift Management System</p>
+          <p className="text-xs text-slate-400">BrainShift Management System</p>
         </div>
 
         {/* Navigation Section */}
         <div className="space-y-2">
-          <span className="text-[10px] uppercase font-mono font-bold text-slate-400 tracking-wider block px-3">
+          <span className="text-xs uppercase font-mono font-bold text-slate-400 tracking-wider block px-3">
             Main Menu
           </span>
 
@@ -99,17 +99,14 @@ export default function AdminPanelLayout({ children }: { children: React.ReactNo
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center justify-between px-3.5 py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
+                  className={`flex items-center gap-3 px-3.5 py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 font-bold'
                       : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span>{item.name}</span>
-                  </div>
-                  {isActive && <ChevronRight className="w-4 h-4 shrink-0" />}
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span>{item.name}</span>
                 </Link>
               );
             })}
@@ -118,14 +115,14 @@ export default function AdminPanelLayout({ children }: { children: React.ReactNo
 
         {/* Quick Action Button */}
         <div className="pt-4 border-t border-slate-700/60 space-y-3">
-          <span className="text-[10px] uppercase font-mono font-bold text-slate-400 tracking-wider block px-3">
+          <span className="text-xs uppercase font-mono font-bold text-slate-400 tracking-wider block px-3">
             Quick Actions
           </span>
           <Link
             href="/adminpanel/courses/new"
             className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors"
           >
-            <PlusCircle className="w-4 h-4 text-amber-400" />
+            <PlusCircle className="w-4 h-4 text-amber-400 shrink-0" />
             <span>New Course Listing</span>
           </Link>
 

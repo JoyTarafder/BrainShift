@@ -58,15 +58,15 @@ export default function CourseCard({ course }: CourseCardProps) {
 
         {/* Discount Tag */}
         {hasDiscount && (
-          <div className="absolute top-3 right-3 bg-rose-600 text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-md animate-pulse">
+          <div className="absolute top-3 right-3 bg-rose-600 text-white font-extrabold text-xs px-2.5 py-1 rounded-md shadow-md animate-pulse">
             {discountPercent}% OFF
           </div>
         )}
 
         {/* Enrollment Closed Overlay */}
         {!enrollmentOpen && (
-          <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center">
-            <span className="bg-rose-600 text-white font-extrabold text-xs px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg border border-rose-400">
+          <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs flex items-end justify-start p-3.5">
+            <span className="bg-rose-600 text-white font-bold text-xs px-3 py-1.5 rounded-lg shadow-lg border border-rose-400">
               Enrollment Closed
             </span>
           </div>
@@ -85,20 +85,20 @@ export default function CourseCard({ course }: CourseCardProps) {
         </div>
 
         <div className="pt-4 border-t border-slate-100 space-y-4">
-          <div className="flex items-center justify-between text-xs text-slate-500">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between text-xs text-slate-500 gap-2">
+            <div className="flex items-center gap-1.5 shrink-0">
               <Clock className="w-4 h-4 text-amber-500" />
               <span>{duration}</span>
             </div>
-            <div className="flex items-center gap-1 text-slate-700 font-semibold bg-slate-100 px-2 py-0.5 rounded">
-              <Layers className="w-3.5 h-3.5 text-indigo-600" />
-              <span className="truncate max-w-[120px]">{batchInfo}</span>
+            <div className="flex items-center gap-1 text-slate-700 font-semibold bg-slate-100 px-2.5 py-1 rounded-lg">
+              <Layers className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+              <span className="text-xs">{batchInfo}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-1">
             <div>
-              <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Course Fee</span>
+              <span className="text-xs uppercase font-bold text-slate-400 block tracking-wider">Course Fee</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-black text-[#0b2545]">
                   ৳ {price.toLocaleString('en-BD')}

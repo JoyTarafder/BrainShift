@@ -690,14 +690,14 @@ export default function AdminBatchDetailPage() {
       </Link>
 
       {/* Top Batch Header Card */}
-      <div className="bg-gradient-to-r from-[#0b2545] via-[#13293d] to-[#1e3a8a] text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#0b2545] via-[#13293d] to-[#1e3a8a] text-white rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-3 relative z-10">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="bg-amber-500 text-slate-950 font-extrabold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+            <span className="bg-amber-500 text-slate-950 font-bold text-xs px-3 py-1 rounded-lg shadow-xs">
               {batch?.courseId?.subject || 'CS'} Tuition Batch
             </span>
             <span
-              className={`text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full border ${
+              className={`text-xs font-bold capitalize px-3 py-1 rounded-lg border ${
                 batch?.status === 'active'
                   ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                   : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -735,7 +735,7 @@ export default function AdminBatchDetailPage() {
             href={`/learn/${batch.courseId._id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-lg transition-transform hover:-translate-y-0.5 shrink-0 self-start md:self-auto z-10"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 transition-all shrink-0 self-start md:self-auto z-10"
           >
             <span>Preview Student Learning Classroom</span>
             <ExternalLink className="w-4 h-4" />
@@ -745,14 +745,14 @@ export default function AdminBatchDetailPage() {
 
       {/* Feedback Messages */}
       {successMsg && (
-        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 font-bold shadow-xs animate-in fade-in">
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 font-bold shadow-xs animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 font-bold shadow-xs animate-in fade-in">
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 font-bold shadow-xs animate-in fade-in">
           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
           <span>{error}</span>
         </div>
@@ -762,7 +762,7 @@ export default function AdminBatchDetailPage() {
       <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('lessons')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'lessons'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -774,7 +774,7 @@ export default function AdminBatchDetailPage() {
 
         <button
           onClick={() => setActiveTab('students')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'students'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -786,7 +786,7 @@ export default function AdminBatchDetailPage() {
 
         <button
           onClick={() => setActiveTab('links')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'links'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -798,7 +798,7 @@ export default function AdminBatchDetailPage() {
 
         <button
           onClick={() => setActiveTab('notice')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'notice'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -810,7 +810,7 @@ export default function AdminBatchDetailPage() {
 
         <button
           onClick={() => setActiveTab('materials')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'materials'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -822,7 +822,7 @@ export default function AdminBatchDetailPage() {
 
         <button
           onClick={() => setActiveTab('assignments')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'assignments'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -834,7 +834,7 @@ export default function AdminBatchDetailPage() {
 
         <button
           onClick={() => setActiveTab('exams')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all whitespace-nowrap ${
             activeTab === 'exams'
               ? 'bg-[#0b2545] text-white shadow-md'
               : 'text-slate-600 hover:bg-slate-100'
@@ -849,10 +849,10 @@ export default function AdminBatchDetailPage() {
       {activeTab === 'lessons' && (
         <div className="space-y-6">
           {/* Add / Seed Lesson Bar */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
-                <h2 className="text-xl font-black text-[#0b2545] flex items-center gap-2">
+                <h2 className="text-xl font-bold text-[#0b2545] flex items-center gap-2">
                   <PlayCircle className="w-5 h-5 text-amber-500" />
                   <span>Video Lessons & YouTube Links ({lessons.length})</span>
                 </h2>
@@ -863,7 +863,7 @@ export default function AdminBatchDetailPage() {
 
               <button
                 onClick={handleSeed24Classes}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-md transition-all shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20 transition-all shrink-0"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>Auto-Populate 24 Standard HSC Classes</span>
@@ -871,9 +871,9 @@ export default function AdminBatchDetailPage() {
             </div>
 
             {/* Add New Lesson Form */}
-            <form onSubmit={handleAddLesson} className="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+            <form onSubmit={handleAddLesson} className="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
               <div className="sm:col-span-6">
-                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1">
                   Lesson / Class Title *
                 </label>
                 <input
@@ -887,7 +887,7 @@ export default function AdminBatchDetailPage() {
               </div>
 
               <div className="sm:col-span-4">
-                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1">
                   YouTube / Google Drive Video Link *
                 </label>
                 <input
@@ -901,7 +901,7 @@ export default function AdminBatchDetailPage() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-xs font-extrabold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1">
                   Duration (Mins)
                 </label>
                 <input
@@ -917,7 +917,7 @@ export default function AdminBatchDetailPage() {
                 <button
                   type="submit"
                   disabled={addingLesson || saving}
-                  className="px-6 py-2.5 rounded-xl font-black bg-[#0b2545] hover:bg-amber-500 hover:text-slate-950 text-white text-xs shadow-md transition-all inline-flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl font-bold bg-[#0b2545] hover:bg-amber-500 hover:text-slate-950 text-white text-xs shadow-md transition-all inline-flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4 text-amber-400" />
                   <span>{addingLesson || saving ? 'Saving Class...' : 'Add Class Lesson'}</span>
@@ -927,7 +927,7 @@ export default function AdminBatchDetailPage() {
           </div>
 
           {/* List of 24 Lessons */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
             <h3 className="text-base font-bold text-[#0b2545]">
               Classes Playlist ({lessons.length} Lessons Added)
             </h3>
@@ -941,16 +941,16 @@ export default function AdminBatchDetailPage() {
                 {lessons.map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors gap-3"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-slate-300 transition-colors gap-3"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-[#0b2545] text-amber-400 flex items-center justify-center font-mono font-black text-xs shrink-0 shadow-xs">
+                      <div className="w-8 h-8 rounded-lg bg-[#0b2545] text-amber-400 flex items-center justify-center font-mono font-bold text-xs shrink-0 shadow-xs">
                         {idx + 1}
                       </div>
                       <div className="space-y-0.5">
-                        <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm">{item.title}</h4>
-                        <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono">
-                          <span className="text-indigo-600 font-semibold truncate max-w-xs sm:max-w-md">
+                        <h4 className="font-bold text-slate-900 text-xs sm:text-sm">{item.title}</h4>
+                        <div className="flex items-center gap-3 text-xs text-slate-500 font-mono">
+                          <span className="text-slate-600 font-semibold truncate max-w-xs sm:max-w-md">
                             {item.url}
                           </span>
                           <span>• {item.durationMinutes || 45} Mins</span>
@@ -963,7 +963,7 @@ export default function AdminBatchDetailPage() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
+                        className="p-2 text-slate-600 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition-colors"
                         title="Preview YouTube Video"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -971,7 +971,7 @@ export default function AdminBatchDetailPage() {
 
                       <button
                         onClick={() => handleStartEdit(idx)}
-                        className="p-2 text-slate-700 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition-colors font-bold border border-slate-200 bg-white"
+                        className="p-2 text-slate-700 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors font-bold border border-slate-200 bg-white"
                         title="Edit Class Details"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -979,7 +979,7 @@ export default function AdminBatchDetailPage() {
 
                       <button
                         onClick={() => handleDeleteLesson(idx)}
-                        className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
+                        className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
                         title="Delete Lesson"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -995,20 +995,20 @@ export default function AdminBatchDetailPage() {
 
       {/* EDIT LESSON POPUP MODAL */}
       {editingIndex !== null && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 relative space-y-4 animate-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-lg">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 relative space-y-4 animate-in zoom-in-95 duration-150">
             <button
               onClick={() => setEditingIndex(null)}
-              className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
 
             <div className="space-y-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+              <span className="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-lg border border-amber-200 inline-block">
                 Editing Class #{editingIndex + 1}
               </span>
-              <h3 className="text-lg font-black text-[#0b2545]">
+              <h3 className="text-lg font-bold text-[#0b2545]">
                 Edit Lesson Details
               </h3>
             </div>
@@ -1067,7 +1067,7 @@ export default function AdminBatchDetailPage() {
                 type="button"
                 onClick={() => handleSaveEdit(editingIndex)}
                 disabled={saving}
-                className="px-5 py-2 bg-[#0b2545] hover:bg-amber-500 hover:text-slate-950 text-white rounded-xl text-xs font-black shadow-md transition-all inline-flex items-center gap-1.5"
+                className="px-5 py-2 bg-[#0b2545] hover:bg-amber-500 hover:text-slate-950 text-white rounded-xl text-xs font-bold shadow-md transition-all inline-flex items-center gap-1.5"
               >
                 <Save className="w-3.5 h-3.5 text-amber-400" />
                 <span>{saving ? 'Saving...' : 'Save Lesson Changes'}</span>

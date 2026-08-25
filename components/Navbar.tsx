@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { ShieldCheck, LogOut, User, BookOpen, Menu, X, Home, GraduationCap } from 'lucide-react';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const isAdmin = (session?.user as any)?.role === 'admin';
   const isStudent = session && !isAdmin;
@@ -41,22 +43,34 @@ export default function Navbar() {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 font-medium text-slate-200 text-sm">
-          <Link href="/" className="hover:text-amber-400 transition-colors">
+          <Link
+            href="/"
+            aria-current={pathname === '/' ? 'page' : undefined}
+            className={`transition-colors ${pathname === '/' ? 'text-amber-400 font-bold' : 'hover:text-amber-400'}`}
+          >
             Home
           </Link>
-          <Link href="/courses" className="hover:text-amber-400 transition-colors">
+          <Link
+            href="/courses"
+            aria-current={pathname?.startsWith('/courses') ? 'page' : undefined}
+            className={`transition-colors ${pathname?.startsWith('/courses') ? 'text-amber-400 font-bold' : 'hover:text-amber-400'}`}
+          >
             Courses
           </Link>
-          <Link href="/about" className="hover:text-amber-400 transition-colors">
+          <Link
+            href="/about"
+            aria-current={pathname === '/about' ? 'page' : undefined}
+            className={`transition-colors ${pathname === '/about' ? 'text-amber-400 font-bold' : 'hover:text-amber-400'}`}
+          >
             About Joy
           </Link>
 
           {isAdmin && (
             <Link
               href="/adminpanel"
-              className="inline-flex items-center gap-1.5 text-amber-400 font-bold hover:text-amber-300 transition-colors bg-amber-500/10 px-3.5 py-1.5 rounded-xl border border-amber-500/30"
+              aria-current={pathname?.startsWith('/admin') ? 'page' : undefined}
+              className={`transition-colors ${pathname?.startsWith('/admin') ? 'text-amber-400 font-bold' : 'hover:text-amber-400'}`}
             >
-              <ShieldCheck className="w-4 h-4" />
               <span>Admin Portal</span>
             </Link>
           )}
@@ -64,9 +78,9 @@ export default function Navbar() {
           {isStudent && (
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-1.5 text-amber-400 font-bold hover:text-amber-300 transition-colors bg-amber-500/10 px-3.5 py-1.5 rounded-xl border border-amber-500/30"
+              aria-current={pathname?.startsWith('/dashboard') ? 'page' : undefined}
+              className={`transition-colors ${pathname?.startsWith('/dashboard') ? 'text-amber-400 font-bold' : 'hover:text-amber-400'}`}
             >
-              <BookOpen className="w-4 h-4" />
               <span>My Dashboard</span>
             </Link>
           )}
@@ -75,14 +89,15 @@ export default function Navbar() {
         {/* Desktop Auth Action Buttons */}
         <div className="hidden md:flex items-center gap-4">
           {session ? (
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold text-slate-300 bg-slate-800/80 px-2.5 py-1 rounded-md border border-slate-700">
+            <div className="flex items-center bg-slate-800/90 border border-slate-700/80 rounded-xl px-2.5 py-1.5 gap-2.5 shadow-sm">
+              <span className="text-xs font-semibold text-slate-200 px-1">
                 {cleanName} {isAdmin ? '(Admin)' : ''}
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-rose-600 text-white transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-700/80 hover:bg-rose-600 text-slate-200 hover:text-white transition-colors cursor-pointer"
                 title="Sign Out"
+                aria-label="Sign Out"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>
@@ -110,7 +125,7 @@ export default function Navbar() {
         {/* Mobile Hamburger Toggle Button */}
         <div className="flex items-center gap-2 md:hidden">
           {session && (
-            <span className="text-[11px] font-bold text-amber-400 bg-slate-800/90 px-2 py-1 rounded border border-slate-700 truncate max-w-[110px]">
+            <span className="text-xs font-bold text-amber-400 bg-slate-800/90 px-2.5 py-1 rounded-lg border border-slate-700 truncate max-w-[120px]">
               {cleanName}
             </span>
           )}
@@ -130,7 +145,12 @@ export default function Navbar() {
           <Link
             href="/"
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-200 hover:bg-slate-800 hover:text-amber-400 transition-colors"
+            aria-current={pathname === '/' ? 'page' : undefined}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              pathname === '/'
+                ? 'bg-slate-800 text-amber-400 font-bold'
+                : 'text-slate-200 hover:bg-slate-800 hover:text-amber-400'
+            }`}
           >
             <Home className="w-4 h-4 text-amber-400" />
             <span>Home</span>
@@ -139,7 +159,12 @@ export default function Navbar() {
           <Link
             href="/courses"
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-200 hover:bg-slate-800 hover:text-amber-400 transition-colors"
+            aria-current={pathname?.startsWith('/courses') ? 'page' : undefined}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              pathname?.startsWith('/courses')
+                ? 'bg-slate-800 text-amber-400 font-bold'
+                : 'text-slate-200 hover:bg-slate-800 hover:text-amber-400'
+            }`}
           >
             <BookOpen className="w-4 h-4 text-amber-400" />
             <span>Courses & Materials</span>
@@ -148,7 +173,12 @@ export default function Navbar() {
           <Link
             href="/about"
             onClick={closeMobileMenu}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-200 hover:bg-slate-800 hover:text-amber-400 transition-colors"
+            aria-current={pathname === '/about' ? 'page' : undefined}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              pathname === '/about'
+                ? 'bg-slate-800 text-amber-400 font-bold'
+                : 'text-slate-200 hover:bg-slate-800 hover:text-amber-400'
+            }`}
           >
             <GraduationCap className="w-4 h-4 text-amber-400" />
             <span>About Joy Tarafder</span>

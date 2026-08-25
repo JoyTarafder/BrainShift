@@ -56,9 +56,9 @@ export default function Home() {
 
               <p className="text-base sm:text-lg text-slate-300 max-w-2xl">
                 Expert 1-on-1 and group tuition by <strong>Joy Tarafder</strong> (CSE @ IUB). Specializing in 
-                <span className="text-amber-300 font-semibold"> Class 5–8 (All Subjects)</span>, 
-                <span className="text-amber-300 font-semibold"> Class 9–10 (Science Only)</span>, 
-                <span className="text-amber-300 font-semibold"> Inter ICT</span>, and University Computer Science & Coding.
+                <span className="text-amber-400 font-semibold"> Class 5–8 (All Subjects)</span>, 
+                <span className="text-amber-400 font-semibold"> Class 9–10 (Science Only)</span>, 
+                <span className="text-amber-400 font-semibold"> Inter ICT</span>, and University Computer Science & Coding.
               </p>
 
               {/* CTAs */}
@@ -82,15 +82,15 @@ export default function Home() {
               <div className="pt-8 border-t border-slate-700/60 grid grid-cols-3 gap-2 sm:gap-4 text-center lg:text-left">
                 <div>
                   <p className="text-base sm:text-2xl font-bold text-amber-400">Class 5–10</p>
-                  <p className="text-[10px] sm:text-xs text-slate-400">All Subjects & Science</p>
+                  <p className="text-xs text-slate-400">All Subjects & Science</p>
                 </div>
                 <div>
                   <p className="text-base sm:text-2xl font-bold text-white">Inter ICT</p>
-                  <p className="text-[10px] sm:text-xs text-slate-400">Class 11–12 HSC</p>
+                  <p className="text-xs text-slate-400">Class 11–12 HSC</p>
                 </div>
                 <div>
                   <p className="text-base sm:text-2xl font-bold text-amber-400">CSE @ IUB</p>
-                  <p className="text-[10px] sm:text-xs text-slate-400">CloudCoder Intern</p>
+                  <p className="text-xs text-slate-400">CloudCoder Intern</p>
                 </div>
               </div>
             </div>
@@ -98,13 +98,13 @@ export default function Home() {
             {/* Right Card / Tuition Highlight Showcase */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="w-full max-w-md bg-slate-900/90 border border-slate-700/70 rounded-2xl p-6 shadow-2xl backdrop-blur-xl space-y-6">
-                <div className="bg-white rounded-xl p-4 flex justify-center shadow-inner">
+                <div className="bg-slate-800/80 border border-slate-700/60 rounded-xl p-3.5 flex justify-center backdrop-blur-sm">
                   <Image
                     src="/images/brainshift-logo.png"
                     alt="BrainShift Brand Logo"
-                    width={260}
-                    height={80}
-                    style={{ height: "72px", width: "auto" }}
+                    width={180}
+                    height={48}
+                    style={{ height: "42px", width: "auto" }}
                     className="object-contain"
                     unoptimized
                   />
@@ -121,7 +121,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-amber-400 shrink-0" />
-                    <span><strong>HSC / Inter:</strong> ICT (তথ্য ও যোগাযোগ প্রযুক্তি)</span>
+                    <span><strong>Class 11–12 (HSC):</strong> ICT (তথ্য ও যোগাযোগ প্রযুক্তি)</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-amber-400 shrink-0" />
@@ -216,7 +216,7 @@ export default function Home() {
                 HSC / Inter (11–12)
               </span>
               <h3 className="text-xl font-bold text-slate-900">
-                ICT (তথ্য ও যোগাযোগ প্রযুক্তি)
+                HSC ICT (তথ্য ও যোগাযোগ প্রযুক্তি)
               </h3>
               <p className="text-slate-600 text-sm leading-relaxed">
                 Complete HSC ICT syllabus: Chapter 1-6 including C Programming, HTML, Database & Logic Gates.
@@ -307,7 +307,15 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div
+            className={`grid gap-8 ${
+              courses.length === 1
+                ? "grid-cols-1 max-w-md mx-auto"
+                : courses.length === 2
+                ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
+                : "grid-cols-1 md:grid-cols-3"
+            }`}
+          >
             {courses.slice(0, 3).map((course) => (
               <CourseCard key={course.slug} course={course} />
             ))}
@@ -319,10 +327,10 @@ export default function Home() {
       <Testimonials />
 
       {/* About Teaser Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-r from-slate-900 to-[#0b2545] rounded-3xl p-8 lg:p-12 text-white shadow-xl">
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-gradient-to-r from-slate-900 to-[#0b2545] rounded-2xl p-8 lg:p-10 text-white shadow-xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-8 space-y-4">
+            <div className="lg:col-span-7 space-y-4">
               <h2 className="text-3xl font-extrabold text-amber-400">
                 About Joy Tarafder
               </h2>
@@ -334,8 +342,8 @@ export default function Home() {
                 <strong>Inter ICT</strong>, and University CSE courses.
               </p>
             </div>
-            <div className="lg:col-span-4 flex justify-center">
-              <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center space-y-3">
+            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+              <div className="w-full max-w-sm bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 text-center space-y-3">
                 <p className="text-lg font-bold text-white">
                   Interested in Private Tuition?
                 </p>
@@ -344,9 +352,10 @@ export default function Home() {
                 </p>
                 <Link
                   href="/about"
-                  className="inline-block mt-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm rounded-lg shadow transition-colors"
+                  className="inline-flex items-center justify-center gap-2 mt-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 transition-all"
                 >
-                  Read Full Details
+                  <span>Read Full Details</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>

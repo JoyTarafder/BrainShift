@@ -51,21 +51,21 @@ export default function QuickEnrollToggle({
       type="button"
       onClick={handleToggle}
       disabled={loading}
-      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-extrabold transition-all shadow-xs ${
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold transition-colors cursor-pointer ${
         isOpen
           ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
           : 'bg-rose-50 text-rose-800 border-rose-300 hover:bg-rose-100'
       }`}
-      title="Click to toggle Enrollment OPEN / CLOSED status"
+      title="Click to toggle enrollment status (Open / Closed)"
     >
       {loading ? (
         <RefreshCw className="w-3.5 h-3.5 animate-spin" />
       ) : isOpen ? (
-        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
       ) : (
-        <XCircle className="w-3.5 h-3.5 text-rose-600" />
+        <XCircle className="w-3.5 h-3.5 text-rose-700" />
       )}
-      <span>{isOpen ? '🟢 OPEN (Accepting)' : '🔴 CLOSED (Full)'}</span>
+      <span>{isOpen ? 'Open' : 'Closed'}</span>
     </button>
   );
 }

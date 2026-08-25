@@ -29,7 +29,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-slate-50 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Header Banner */}
-        <div className="bg-gradient-to-br from-[#0b2545] via-[#13293d] to-[#1e3a8a] text-white rounded-3xl p-8 lg:p-14 shadow-2xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-[#0b2545] via-[#13293d] to-[#1e3a8a] text-white rounded-2xl p-8 lg:p-14 shadow-2xl relative overflow-hidden">
           <div className="relative z-10 max-w-3xl space-y-4">
             <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-semibold">
               <GraduationCap className="w-4 h-4" />
@@ -124,7 +124,7 @@ export default function AboutPage() {
         </div>
 
         {/* Bio & Philosophy Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Bio Details */}
           <div className="lg:col-span-7 space-y-8">
             {/* Background & Journey */}
@@ -160,14 +160,14 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div className="relative pl-6 space-y-8 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+              <div className="relative pl-6 space-y-8 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-1 before:bg-slate-300">
                 {/* University */}
                 <div className="relative group">
                   <div className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-amber-500 border-4 border-white shadow-sm ring-2 ring-amber-500/20 group-hover:scale-125 transition-transform" />
-                  <span className="inline-block px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold text-xs mb-1">
+                  <span className="inline-block px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-700 font-bold text-xs mb-1">
                     (2020 – 2025)
                   </span>
-                  <h3 className="font-extrabold text-slate-900 text-base tracking-tight uppercase">
+                  <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
                     Independent University, Bangladesh (IUB)
                   </h3>
                   <p className="text-slate-700 font-medium text-sm">
@@ -178,16 +178,16 @@ export default function AboutPage() {
                 {/* College */}
                 <div className="relative group">
                   <div className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-slate-400 border-4 border-white shadow-sm group-hover:scale-125 transition-transform" />
-                  <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-bold text-xs mb-1">
+                  <span className="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs mb-1">
                     (2017 – 2019)
                   </span>
-                  <h3 className="font-extrabold text-slate-900 text-base tracking-tight uppercase">
+                  <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
                     Ghatail Cantonment College, Tangail
                   </h3>
                   <p className="text-slate-700 font-medium text-sm">
                     Higher Secondary Certificate (Science)
                   </p>
-                  <span className="inline-flex items-center px-2 py-0.5 mt-1 rounded bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
+                  <span className="inline-flex items-center px-2 py-0.5 mt-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
                     GPA – 5.00
                   </span>
                 </div>
@@ -195,16 +195,16 @@ export default function AboutPage() {
                 {/* High School */}
                 <div className="relative group">
                   <div className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-slate-400 border-4 border-white shadow-sm group-hover:scale-125 transition-transform" />
-                  <span className="inline-block px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 font-bold text-xs mb-1">
+                  <span className="inline-block px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs mb-1">
                     (2012 – 2017)
                   </span>
-                  <h3 className="font-extrabold text-slate-900 text-base tracking-tight uppercase">
+                  <h3 className="font-extrabold text-slate-900 text-base tracking-tight">
                     Kalihati R. S. Govt. Pilot High School
                   </h3>
                   <p className="text-slate-700 font-medium text-sm">
                     Secondary School Certificate (Science)
                   </p>
-                  <span className="inline-flex items-center px-2 py-0.5 mt-1 rounded bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
+                  <span className="inline-flex items-center px-2 py-0.5 mt-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200">
                     GPA – 5.00
                   </span>
                 </div>
@@ -249,7 +249,7 @@ export default function AboutPage() {
           </div>
 
           {/* Right Credentials & Skills */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
             {/* Credentials Card */}
             <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-md space-y-4">
               <h3 className="text-lg font-bold text-[#0b2545] border-b border-slate-100 pb-3">
@@ -304,7 +304,7 @@ export default function AboutPage() {
                 {subjectsAndSkills.map((item) => (
                   <span
                     key={item}
-                    className="bg-slate-100 text-slate-800 font-semibold text-xs px-3 py-1.5 rounded-lg border border-slate-200"
+                    className="bg-slate-100 text-slate-700 font-semibold text-xs px-3 py-1.5 rounded-lg border border-slate-200"
                   >
                     {item}
                   </span>
@@ -317,16 +317,16 @@ export default function AboutPage() {
               <h3 className="text-lg font-bold text-amber-400">
                 Interested in Private Tuition?
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 Inquire about tuition availability, class schedule, batch/1-on-1 options, and location details directly via WhatsApp or Email.
               </p>
 
-              <div className="space-y-2 pt-2">
+              <div className="space-y-2.5 pt-2">
                 <a
                   href="https://wa.me/8801714890199"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-emerald-500 hover:bg-emerald-600 text-white text-sm transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm shadow-md transition-colors"
                 >
                   <MessageSquare className="w-4 h-4" />
                   <span>WhatsApp Inquiry (01714890199)</span>
@@ -334,7 +334,7 @@ export default function AboutPage() {
 
                 <a
                   href="mailto:joytarafder3@gmail.com"
-                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm transition-colors"
                 >
                   <Mail className="w-4 h-4" />
                   <span>Email Joy Directly</span>
